@@ -1,0 +1,84 @@
+---
+import type { Post } from "@lib/content"
+import { getSection } from "@consts"
+import { formatDate, readingTime } from "@lib/utils"
+import Icon from "@components/Icon.astro"
+
+type Props = { post: Post }
+
+const { post } = Astro.props
+const { title, summary, date, section, tags } = post.data
+const meta = getSection(section)
+---
+
+<a
+  href={`/blog/${post.slug}`}
+  class="group relative block overflow-hidden rounded-3xl p-px transition-transform duration-700 ease-portal hover:-translate-y-1"
+  data-reveal
+>
+  <!-- A neon edge, painted once rather than spun every frame -->
+  <span
+    class="absolute inset-0 opacity-60 transition-opacity duration-700 group-hover:opacity-100"
+    style="background: linear-gradient(135deg, rgba(177,78,255,.9), rgba(107,233,255,.35) 38%, rgba(122,43,212,.25) 62%, rgba(221,180,255,.75));"
+    aria-hidden="true"></span>
+
+  <div class="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-void/95">
+    <!-- Aurora inside the frame -->
+    <div
+      class="pointer-events-none absolute inset-0"
+      style="background: radial-gradient(90% 120% at 15% 0%, rgba(122,43,212,.28), transparent 60%), radial-gradient(70% 100% at 100% 100%, rgba(107,233,255,.12), transparent 65%);"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative grid gap-8 p-9 sm:p-12 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div>
+        <div class="flex flex-wrap items-center gap-3">
+          <span
+            class="inline-flex items-center gap-2 rounded-full border border-glow/40 bg-glow/10 px-3 py-1 font-sans text-[0.66rem] uppercase tracking-[0.18em] text-glow"
+          >
+            <Icon name="sparkle" class="size-3" />
+            Featured
+          </span>
+
+          {
+            meta && (
+              <span class={`font-sans text-[0.7rem] uppercase tracking-[0.18em] ${meta.ACCENT}`}>
+                {meta.LABEL}
+              </span>
+            )
+          }
+        </div>
+
+        <h2
+          class="mt-7 max-w-3xl text-[clamp(1.9rem,1.3rem+2.2vw,3.2rem)] leading-[1.08] text-starlight transition-colors duration-500 group-hover:text-glow-faint"
+        >
+          {title}
+        </h2>
+
+        <p class="mt-6 max-w-2xl text-lead leading-relaxed text-mist">{summary}</p>
+
+        <div
+          class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-[0.72rem] uppercase tracking-[0.14em] text-dim"
+        >
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          <span class="inline-flex items-center gap-1.5">
+            <Icon name="clock" class="size-3.5" />
+            {readingTime(post.body)}
+          </span>
+          {tags.slice(0, 3).map((tag) => <span class="text-amethyst-mist">#{tag}</span>)}
+        </div>
+      </div>
+
+      <span
+        class="inline-flex items-center gap-2 whitespace-nowrap font-sans text-[0.75rem] uppercase tracking-[0.16em] text-starlight"
+      >
+        Read it
+        <Icon
+          name="arrow-right"
+          class="size-5 transition-transform duration-500 ease-portal group-hover:translate-x-2"
+        />
+      </span>
+    </div>
+  </div>
+</a>

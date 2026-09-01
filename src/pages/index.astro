@@ -1,219 +1,201 @@
 ---
-import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
-import ArrowCard from "@components/ArrowCard"
-import StackCard from "@components/StackCard.astro"
-import { SITE, SOCIALS } from "@consts"
-import TwinklingStars from "@components/TwinklingStars.astro"
-import MeteorShower from "@components/MeteorShower.astro"
+import Container from "@components/Container.astro"
+import Portrait from "@components/Portrait.astro"
+import Icon from "@components/Icon.astro"
+import MetricGrid from "@components/MetricGrid.astro"
+import SectionHeading from "@components/SectionHeading.astro"
+import ProjectCard from "@components/ProjectCard.astro"
+import PostRow from "@components/PostRow.astro"
+import ContactBand from "@components/ContactBand.astro"
+import { METRICS, SITE } from "@consts"
+import { getPosts, getProjects } from "@lib/content"
 
-const posts = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
-
-const projects = (await getCollection("projects"))
-  .filter(project => !project.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
-
-const stack = [
-  { 
-    text: "Astro", 
-    icon: "astro", 
-    href: "https://astro.build" 
-  },
-  { 
-    text: "Javascript", 
-    icon: "javascript", 
-    href: "https://www.javascript.com" 
-  },
-  { 
-    text: "Typescript", 
-    icon: "typescript", 
-    href: "https://www.typescriptlang.org" 
-  },
-  { 
-    text: "Tailwind", 
-    icon: "tailwind", 
-    href: "https://tailwindcss.com" 
-  },
-]
+const posts = (await getPosts()).slice(0, 3)
+const projects = (await getProjects()).slice(0, 3)
 ---
 
-<PageLayout title="Home" description={SITE.DESCRIPTION}>
-
-  <!-- Light Mode: Particles -->
-  <div class='absolute inset-0 block dark:hidden'>
-    <div id='particles1' class='fixed inset-0'></div>
-    <div id='particles2' class='fixed inset-0'></div>
-    <div id='particles3' class='fixed inset-0'></div>
-  </div>
-
-  <!-- Dark Theme: Stars -->
-  <div class='absolute inset-0 bg-black hidden dark:block'>
-    <div id='stars1' class='fixed inset-0'></div>
-    <div id='stars2' class='fixed inset-0'></div>
-    <div id='stars3' class='fixed inset-0'></div>
-  </div>
-
-  <!-- Dark Theme: Twinkling Stars / Metors -->
-  <div id="galaxy" class="fixed inset-0">
-    <div class="hidden dark:block">
-      <TwinklingStars/>
-      <MeteorShower/>
+<PageLayout title={SITE.TITLE} description={SITE.DESCRIPTION}>
+  <!-- ══════════════════════════════════════════════════════════
+       HERO — the threshold
+       ══════════════════════════════════════════════════════════ -->
+  <section class="relative flex min-h-[100svh] items-center overflow-hidden pb-24 pt-36">
+    <!-- The horizon: light cresting over an unseen planet -->
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[70vh]"
+      style="background: radial-gradient(70% 100% at 50% 0%, rgba(177,78,255,.18), transparent 65%);"
+      aria-hidden="true"
+    >
     </div>
-  </div>
 
-  <script is:inline src="/js/bg.js"></script>
-  
-  <!-- HERO -->
-  <section class="relative h-screen w-full">
-    <div id="planetcont" class='animate absolute inset-0 top-1/4 overflow-hidden'>
-      <div id="crescent" class='absolute top-0 left-1/2 -translate-x-1/2 w-[250vw] min-h-[100vh] aspect-square rounded-full p-[1px] bg-gradient-to-b from-black/25 dark:from-white/75 from-0% to-transparent to-5%'>
-        <div id="planet" class='w-full h-full bg-white dark:bg-black rounded-full p-[1px] overflow-hidden flex justify-center'>
-          <div id="blur" class='w-full h-20 rounded-full bg-neutral-900/25 dark:bg-white/25 blur-3xl'/>
-        </div>
-      </div>
-    </div>
-    <div class="animate absolute h-full w-full flex items-center justify-center">
-      <div class='relative w-full h-full flex items-center justify-center'>
-        <div class='p-5 text-center'>
-          <p class='animated text-lg md:text-xl lg:text-2xl font-semibold opacity-75'>
-            Hello, I am ...
+    <Container size="wide">
+      <div class="grid items-center gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+        <!-- Words -->
+        <div class="order-2 lg:order-1">
+          <p
+            class="inline-flex items-center gap-2.5 rounded-full border border-[--line] bg-void/50 px-4 py-2"
+            data-rise
+            style="--rise-delay: 0ms"
+          >
+            <span class="relative flex size-2">
+              <span
+                class="absolute inline-flex size-full animate-ping rounded-full bg-nebula opacity-70"
+              ></span>
+              <span class="relative inline-flex size-2 rounded-full bg-nebula"></span>
+            </span>
+            <span class="font-sans text-[0.7rem] uppercase tracking-[0.16em] text-mist">
+              {SITE.LOCATION} · {SITE.AVAILABILITY}
+            </span>
           </p>
-          <p class='animated text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-black dark:text-white'>
-            Astro Sphere
+
+          <h1 class="mt-8 text-hero">
+            <span class="block" data-rise style="--rise-delay: 90ms">Sergiu</span>
+            <span class="neon block" data-rise style="--rise-delay: 170ms">Mocan</span>
+          </h1>
+
+          <p
+            class="mt-7 font-sans text-[0.82rem] uppercase tracking-[0.2em] text-mist"
+            data-rise
+            style="--rise-delay: 250ms"
+          >
+            {SITE.ROLE}
           </p>
-          <p class='animated text-sm md:text-base lg:text-lg opacity-75'>
-            Currently designing products for humans.
+
+          <p
+            class="mt-8 max-w-xl text-lead leading-relaxed text-mist"
+            data-rise
+            style="--rise-delay: 320ms"
+          >
+            I take systems that were never built to scale — a twenty-year-old desktop monolith, a
+            process run by hand every morning — and rebuild them into cloud-native platforms that
+            hold up under real load.
           </p>
-          <div id="ctaButtons" class='animated flex flex-wrap gap-4 justify-center mt-5'>
-            <a href='/blog' class='py-2 px-4 rounded truncate text-xs md:text-sm lg:text-base bg-black dark:bg-white text-white dark:text-black hover:opacity-75 blend'>
-              Read my blog
+
+          <div
+            class="mt-11 flex flex-wrap items-center gap-4"
+            data-rise
+            style="--rise-delay: 400ms"
+          >
+            <a href="/work" class="btn btn-primary" data-magnetic="0.16">
+              Enter the work
+              <Icon name="arrow-right" class="size-4" />
             </a>
-            <a href='/work' class='py-2 px-4 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend'>
-              View my work
+
+            <a href={SITE.CV} download class="btn btn-ghost" data-magnetic="0.16">
+              <Icon name="download" class="size-4" />
+              Download CV
             </a>
           </div>
         </div>
+
+        <!-- Face -->
+        <div class="order-1 mx-auto w-full max-w-[19rem] lg:order-2 lg:max-w-[26rem]">
+          <div data-rise style="--rise-delay: 60ms">
+            <Portrait />
+          </div>
+        </div>
       </div>
+    </Container>
+
+    <!-- Scroll cue -->
+    <div
+      class="pointer-events-none absolute inset-x-0 bottom-8 hidden flex-col items-center gap-3 lg:flex"
+      data-rise
+      style="--rise-delay: 620ms"
+      aria-hidden="true"
+    >
+      <span class="font-sans text-[0.62rem] uppercase tracking-[0.3em] text-dim">Descend</span>
+      <span class="h-14 w-px bg-gradient-to-b from-glow/60 to-transparent"></span>
     </div>
   </section>
 
-  <div class="relative bg-white dark:bg-black">
-    <div class="mx-auto max-w-screen-sm p-5 space-y-24 pb-16">
+  <!-- ══════════════════════════════════════════════════════════
+       IMPACT — the numbers, before anything else
+       ══════════════════════════════════════════════════════════ -->
+  <section class="py-20">
+    <Container size="wide">
+      <p class="eyebrow mb-8" data-reveal>Impact in production</p>
+      <MetricGrid metrics={METRICS} />
+    </Container>
+  </section>
 
-      <!-- About Section -->
-      <section class="animate">
-        <article>
-          <p>I am a <b><i>software engineer</i></b>, <b><i>ui/ux designer</i></b>, <b><i>product planner</i></b>, <b><i>mentor</i></b>, <b><i>student</i></b>, <b><i>minimalist</i></b>, <b><i>eternal optimist</i></b>, <b><i>crypto enthusiast</i></b> and <b><i>sarcasm connoisseur</i></b>.</p>
-          <p>I love to both build and break things. I am motivated by challenging projects with self-guided research and dynamic problem solving. My true passion is crafting creative front end designs with unique takes on color, typography and motion.</p>
-          <p>During my career</p>
-          <p>I have built products ranging from marketing and ecommerce websites to complex enterprise apps with focus on delivering fast, elegant code along with delightful user interfaces.</p>
-          <p>Now</p>
-          <p>I currently work as a software engineer at StreamlineFS, where I do product planning, design and development.</p>
-        </article>
-      </section>
-
-      <!-- Blog Preview Section -->
-      <section class="animate">
-        <div class="space-y-4">
-          <div class="flex justify-between">
-            <p class="font-semibold text-black dark:text-white">
-              Recent posts
-            </p>
-            <a href="/blog" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                All posts
-              </span>
-            </a>
-          </div>
-          <ul class="space-y-4">
-            {posts.map((post) => (
-              <li>
-                <ArrowCard entry={post} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <!-- Tech Stack Section -->
-      <section class="animate">
-        <div class="space-y-4">
-          <p class="font-semibold text-black dark:text-white">
-            Website build with
-          </p>
-          <div class="flex flex-wrap items-center gap-2 mt-5">
-            {stack.map(item => (
-              <StackCard 
-                text={item.text}
-                icon={item.icon}
-                href={item.href}
-              />
-            ))}
-          </div>
-          <div>
-            Performing reactivity and statefulness, special guest
-            <a href="https://www.solidjs.com/" target="_blank" class="w-fit group underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                SolidJS
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Project Preview Section -->
-      <section class="animate">
-        <div class="space-y-4">
-          <div class="flex justify-between">
-            <p class="font-semibold text-black dark:text-white">
-              Recent projects
-            </p>
-            <a href="/projects" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                All projects
-              </span>
-            </a>
-          </div>
-          <ul class="space-y-4">
-            {projects.map((project) => (
-              <li>
-                <ArrowCard entry={project} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <!-- Contact Section -->
-      <section class="animate">
+  <!-- ══════════════════════════════════════════════════════════
+       POSITIONING
+       ══════════════════════════════════════════════════════════ -->
+  <section class="py-20">
+    <Container size="wide">
+      <div class="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div>
-          <p class="font-semibold text-black dark:text-white">
-            Let's Connect
-          </p>
-          <p>
-            Reach out to me via email or on social media.
-          </p>
-          <div class="grid grid-cols-4 gap-y-2 mt-4 auto-cols-min">
-            {SOCIALS.map(social => (
-              <div class="col-span-1 flex items-center gap-1">
-                <span class="whitespace-nowrap truncate">
-                  {social.NAME}
-                </span>
-              </div>
-              <div class="col-span-3 truncate">
-                <a href={social.HREF} target="_blank" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-                  <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                    {social.TEXT}
-                  </span>
-                </a>
-              </div>
-            ))}
+          <p class="eyebrow" data-reveal>The short version</p>
+          <div class="mt-8 hidden h-px w-24 bg-glow/40 lg:block" data-reveal></div>
         </div>
-      </section>
-    </div>
-  </div>
+
+        <div class="space-y-8" data-reveal>
+          <p class="text-[clamp(1.35rem,1rem+1.2vw,1.9rem)] font-normal leading-[1.45] text-starlight">
+            <span class="neon font-semibold">Legacy systems are not old code.</span> They
+            are decisions made under constraints that no longer exist, still running a business that
+            has moved on.
+          </p>
+
+          <p class="max-w-2xl text-body-lg leading-relaxed text-mist">
+            At <strong class="font-semibold text-starlight">TSS Yonder</strong> I lead the migration
+            of a Dealer Management System used by 750+ automotive businesses across Western Europe,
+            from a VB6 desktop application to ASP.NET Core and React on AWS — infrastructure
+            provisioned from scratch with CDK, core services split into Fargate microservices, and
+            deploys that no longer require anyone to hold their breath.
+          </p>
+
+          <p class="max-w-2xl text-body-lg leading-relaxed text-mist">
+            Outside of production I build things that force me to be precise: a nine-contract
+            Ethereum voting system where correctness has to be provable, and a Hamiltonian neural
+            network that refuses to violate conservation of energy. Both are exercises in the same
+            discipline — get the structure right and the behaviour follows.
+          </p>
+
+          <a href="/about" class="link-glow inline-flex items-center gap-2 pt-2 font-sans text-[0.78rem] uppercase tracking-[0.16em]">
+            The longer version
+            <Icon name="arrow-right" class="size-4" />
+          </a>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SELECTED WORK
+       ══════════════════════════════════════════════════════════ -->
+  <section class="py-20">
+    <Container size="wide">
+      <SectionHeading
+        kicker="Selected work"
+        title="Systems built end to end"
+        href="/projects"
+        linkText="All projects"
+      />
+
+      <div class="mt-6">
+        {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+      </div>
+    </Container>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       WRITING
+       ══════════════════════════════════════════════════════════ -->
+  <section class="py-20">
+    <Container size="wide">
+      <SectionHeading
+        kicker="Transmissions"
+        title="Recent writing"
+        href="/blog"
+        linkText="All posts"
+      />
+
+      <div class="mt-6">
+        {posts.map((post) => <PostRow post={post} />)}
+      </div>
+    </Container>
+  </section>
+
+  <ContactBand />
 </PageLayout>

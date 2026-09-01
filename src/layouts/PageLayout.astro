@@ -1,24 +1,62 @@
 ---
 import "@styles/global.css"
-import BaseHead from "@components/BaseHead.astro"
-import Header from "@components/Header.astro"
-import Footer from "@components/Footer.astro"
-import Drawer from "@components/Drawer.astro"
-const { title, description } = Astro.props
 import { SITE } from "@consts"
+import BaseHead from "@components/BaseHead.astro"
+import Atmosphere from "@components/Atmosphere.astro"
+import Header from "@components/Header.astro"
+import Drawer from "@components/Drawer.astro"
+import Footer from "@components/Footer.astro"
+
+type Props = {
+  title: string
+  description: string
+  image?: string
+  article?: {
+    published: Date
+    modified?: Date
+    section?: string
+    tags?: string[]
+  }
+  breadcrumbs?: { name: string; href: string }[]
+}
+
+const { title, description, image, article, breadcrumbs } = Astro.props
+
+// The home page owns the whole title; every other page is namespaced.
+const pageTitle = title === SITE.TITLE ? title : `${title} — ${SITE.TITLE}`
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={`${title} | ${SITE.TITLE}`} description={description} />
+    <BaseHead
+      title={pageTitle}
+      rawTitle={title}
+      description={description}
+      image={image}
+      article={article}
+      breadcrumbs={breadcrumbs}
+    />
   </head>
+
   <body>
+    <a
+      href="#content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[70] focus:rounded-full focus:bg-glow focus:px-5 focus:py-2.5 focus:text-void"
+    >
+      Skip to content
+    </a>
+
+    <!-- The sky keeps drifting between pages -->
+    <Atmosphere transition:persist="atmosphere" />
+
     <Header />
     <Drawer />
-    <main>
+
+    <main id="content">
       <slot />
     </main>
+
     <Footer />
   </body>
 </html>

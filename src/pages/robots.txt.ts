@@ -1,16 +1,13 @@
-import type { APIRoute } from "astro"
+import type { APIContext } from "astro"
 
-const robotsTxt = `
-User-agent: *
+export function GET({ site }: APIContext) {
+  const body = `User-agent: *
 Allow: /
 
-Sitemap: ${new URL("sitemap-index.xml", import.meta.env.SITE).href}
-`.trim()
+Sitemap: ${new URL("sitemap-index.xml", site)}
+`
 
-export const GET: APIRoute = () => {
-  return new Response(robotsTxt, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-    },
+  return new Response(body, {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
   })
 }

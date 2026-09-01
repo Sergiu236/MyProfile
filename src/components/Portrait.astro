@@ -1,0 +1,55 @@
+---
+import { Image } from "astro:assets"
+import portrait from "@assets/sergiu-mocan.png"
+import { cn } from "@lib/utils"
+
+type Props = { class?: string }
+const { class: className } = Astro.props
+---
+
+<!--
+  The photograph itself is never touched — no filter, no tint, no overlay.
+  Everything that makes it sit in the design happens outside the circle:
+  a neon ring, a box-shadow halo (far cheaper than a blurred element) and
+  one satellite tracing a slow orbit.
+-->
+<div class={cn("group relative aspect-square", className)}>
+  <!-- Halo. box-shadow, not filter: blur — same look, a fraction of the memory -->
+  <div
+    class="absolute inset-[3%] rounded-full"
+    style="box-shadow: 0 0 90px -10px rgba(177,78,255,.55), 0 0 160px -30px rgba(122,43,212,.5);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <!-- Outer orbit with a single travelling satellite -->
+  <div
+    class="absolute -inset-[7%] animate-spin-reverse rounded-full border border-dashed border-glow/25"
+    aria-hidden="true"
+  >
+    <span
+      class="absolute left-1/2 top-0 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-nebula"
+      style="box-shadow: 0 0 14px 3px rgba(107,233,255,.7);"></span>
+  </div>
+
+  <!-- Neon rim -->
+  <div
+    class="absolute -inset-[1px] rounded-full"
+    style="background: conic-gradient(from 140deg, rgba(177,78,255,.85), rgba(107,233,255,.35), rgba(221,180,255,.8), rgba(122,43,212,.6), rgba(177,78,255,.85));"
+    aria-hidden="true"
+  >
+  </div>
+
+  <!-- The portrait, exactly as shot -->
+  <figure class="relative size-full overflow-hidden rounded-full bg-void">
+    <Image
+      src={portrait}
+      alt="Sergiu Ioan Mocan, software engineer specialising in .NET and AWS"
+      widths={[280, 420, 560, 800]}
+      sizes="(max-width: 768px) 60vw, 26rem"
+      loading="eager"
+      fetchpriority="high"
+      class="size-full scale-[1.02] object-cover transition-transform duration-[1.4s] ease-portal group-hover:scale-100"
+    />
+  </figure>
+</div>

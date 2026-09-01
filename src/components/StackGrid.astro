@@ -1,0 +1,23 @@
+---
+import { STACK } from "@consts"
+import Icon from "@components/Icon.astro"
+---
+
+<div class="grid gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] sm:grid-cols-2" data-reveal-stagger="90">
+  {
+    STACK.map((group) => (
+      <section class="bg-void/85 p-8" data-reveal>
+        <h3 class="flex items-center gap-3 font-sans text-[0.72rem] uppercase tracking-[0.2em] text-glow/70">
+          <Icon name={group.ICON} class="size-4" />
+          {group.LABEL}
+        </h3>
+
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {group.ITEMS.map((item) => (
+            <li class="chip">{item}</li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>

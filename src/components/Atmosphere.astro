@@ -1,0 +1,39 @@
+---
+/**
+ * Atmosphere.astro
+ * Deep space with a neon violet horizon.
+ *
+ * Two deliberate performance choices:
+ *
+ * 1. No `filter: blur()`. Blurring a 70vmax element forces the compositor
+ *    to allocate an oversized texture and re-blur it; radial gradients are
+ *    soft for free.
+ * 2. Exactly three layers. Anything painted over the <canvas> gets promoted
+ *    to its own composited layer by overlap testing, so the field, the
+ *    horizon, the vignette and the grain are all stacked as backgrounds on
+ *    a single element rather than four separate ones.
+ */
+---
+
+<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+  <!-- One element: grain, horizon, nebula, vignette, ground -->
+  <div
+    class="absolute inset-0"
+    style="background:
+      url('/noise.svg') repeat top left / 180px 180px,
+      linear-gradient(180deg, rgba(221,180,255,.55) 0px, rgba(177,78,255,.28) 1px, transparent 2px),
+      radial-gradient(120% 68% at 50% -8%, rgba(177,78,255,.20) 0%, rgba(122,43,212,.10) 34%, transparent 68%),
+      radial-gradient(72% 52% at 6% 24%, rgba(122,43,212,.16) 0%, transparent 62%),
+      radial-gradient(66% 50% at 96% 68%, rgba(107,233,255,.055) 0%, transparent 60%),
+      radial-gradient(85% 60% at 50% 108%, rgba(177,78,255,.13) 0%, transparent 62%),
+      radial-gradient(130% 95% at 50% 42%, transparent 40%, rgba(4,3,8,.72) 100%),
+      linear-gradient(180deg, #0A0713 0%, #08060E 45%, #06040B 100%);"
+  >
+  </div>
+
+  <!-- Stars: three parallax layers, drawn in atmosphere.js -->
+  <canvas id="starfield" class="absolute inset-0 h-full w-full"></canvas>
+
+  <!-- The light the cursor carries into the void -->
+  <div class="spotlight absolute inset-0"></div>
+</div>

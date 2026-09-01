@@ -1,35 +1,136 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content"
+import type { CollectionEntry } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
-import TopLayout from "@layouts/TopLayout.astro"
-import BottomLayout from "@layouts/BottomLayout.astro"
-import ArticleTopLayout from "@layouts/ArticleTopLayout.astro"
-import ArticleBottomLayout from "@layouts/ArticleBottomLayout.astro"
+import Container from "@components/Container.astro"
+import Icon from "@components/Icon.astro"
+import ArticleNav from "@components/ArticleNav.astro"
+import { getProjects } from "@lib/content"
 
-// Create the static projects pages
 export async function getStaticPaths() {
-	const projects = await getCollection("projects")
-	return projects.map((project) => ({
-		params: { slug: project.slug },
-		props: project,
-	}))
+  const projects = await getProjects()
+
+  return projects.map((project, index) => ({
+    params: { slug: project.slug },
+    props: {
+      project,
+      prev: projects[index - 1],
+      next: projects[index + 1],
+    },
+  }))
 }
 
-// Get the requested project
-type Props = CollectionEntry<"projects">
-const project = Astro.props
-const { title, summary } = project.data
+type Props = {
+  project: CollectionEntry<"projects">
+  prev?: CollectionEntry<"projects">
+  next?: CollectionEntry<"projects">
+}
+
+const { project, prev, next } = Astro.props
+const { title, summary, period, status, role, tags, metrics, demoUrl, repoUrl } = project.data
+const { Content } = await project.render()
 ---
 
-<PageLayout title={title} description={summary}>
-  <TopLayout>
-    <div class="animate">
-      <ArticleTopLayout entry={project} />
+<PageLayout
+  title={title}
+  description={summary}
+  breadcrumbs={[
+    { name: "Projects", href: "/projects" },
+    { name: title, href: `/projects/${project.slug}` },
+  ]}
+>
+  <!-- ── Case study header ──────────────────────────────────── -->
+  <section class="relative pb-16 pt-40 sm:pt-48">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 opacity-70"
+      style="background: radial-gradient(60% 100% at 50% 0%, rgba(177,78,255,.16), transparent 70%);"
+      aria-hidden="true"
+    >
     </div>
-  </TopLayout>
-  <BottomLayout>
-    <div class="animate">
-      <ArticleBottomLayout entry={project} />
-    </div>
-  </BottomLayout>
+
+    <Container size="wide">
+      <a
+        href="/projects"
+        class="group inline-flex items-center gap-2 font-sans text-[0.72rem] uppercase tracking-[0.16em] text-dim transition-colors duration-300 hover:text-glow"
+      >
+        <Icon
+          name="arrow-right"
+          class="size-4 rotate-180 transition-transform duration-500 ease-portal group-hover:-translate-x-1.5"
+        />
+        All projects
+      </a>
+
+      <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <span class="font-sans text-[0.75rem] uppercase tracking-[0.16em] text-mist">{period}</span>
+        <span class="inline-flex items-center gap-1.5 font-sans text-[0.68rem] uppercase tracking-[0.14em] text-nebula">
+          <span class="size-1.5 rounded-full bg-nebula"></span>
+          {status}
+        </span>
+        {role && <span class="font-sans text-[0.72rem] uppercase tracking-[0.12em] text-dim">{role}</span>}
+      </div>
+
+      <h1 class="mt-6 max-w-4xl text-h1">{title}</h1>
+
+      <p class="mt-7 max-w-2xl text-lead leading-relaxed text-mist">{summary}</p>
+
+      {
+        (demoUrl || repoUrl) && (
+          <div class="mt-10 flex flex-wrap gap-4">
+            {demoUrl && (
+              <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <Icon name="globe" class="size-4" />
+                Live demo
+              </a>
+            )}
+            {repoUrl && (
+              <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                <Icon name="link" class="size-4" />
+                Repository
+              </a>
+            )}
+          </div>
+        )
+      }
+
+      {
+        metrics.length > 0 && (
+          <ul class="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] lg:grid-cols-4">
+            {metrics.map((metric) => (
+              <li class="bg-void/85 p-7">
+                <p class="font-display text-[clamp(1.8rem,3vw,2.6rem)] font-semibold leading-none tracking-[-0.03em] text-glow">
+                  {metric.value}
+                </p>
+                <p class="mt-3 text-[0.85rem] leading-snug text-dim">{metric.label}</p>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </Container>
+  </section>
+
+  <!-- ── The write-up ───────────────────────────────────────── -->
+  <section class="pb-16">
+    <Container size="wide">
+      <div class="rule mb-16"></div>
+
+      <div class="grid gap-14 lg:grid-cols-[14rem_1fr] lg:gap-16">
+        <aside class="lg:sticky lg:top-32 lg:self-start">
+          <p class="eyebrow">Built with</p>
+          <ul class="mt-6 flex flex-wrap gap-2">
+            {tags.map((tag) => <li class="chip">{tag}</li>)}
+          </ul>
+        </aside>
+
+        <div class="article">
+          <Content />
+        </div>
+      </div>
+
+      <ArticleNav
+        prev={prev && { href: `/projects/${prev.slug}`, title: prev.data.title }}
+        next={next && { href: `/projects/${next.slug}`, title: next.data.title }}
+      />
+    </Container>
+  </section>
+
 </PageLayout>

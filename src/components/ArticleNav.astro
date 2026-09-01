@@ -1,0 +1,58 @@
+---
+import Icon from "@components/Icon.astro"
+
+type Neighbour = {
+  href: string
+  title: string
+}
+
+type Props = {
+  prev?: Neighbour
+  next?: Neighbour
+}
+
+const { prev, next } = Astro.props
+
+// With only one neighbour, that card takes the full width rather than
+// leaving an empty panel next to it.
+const both = Boolean(prev && next)
+---
+
+{
+  (prev || next) && (
+    <nav
+      class={`mt-20 grid gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] ${both ? "sm:grid-cols-2" : ""}`}
+      aria-label="More reading"
+    >
+      {prev ? (
+        <a href={prev.href} class="group bg-void/85 p-8 transition-colors duration-500 hover:bg-surface/70">
+          <span class="inline-flex items-center gap-2 font-sans text-[0.7rem] uppercase tracking-[0.18em] text-glow/60">
+            <Icon
+              name="arrow-right"
+              class="size-4 rotate-180 transition-transform duration-500 ease-portal group-hover:-translate-x-1.5"
+            />
+            Previous
+          </span>
+          <p class="mt-4 font-display text-[1.2rem] font-medium leading-snug text-starlight transition-colors duration-300 group-hover:text-glow">
+            {prev.title}
+          </p>
+        </a>
+      ) : null}
+
+      {next ? (
+        <a href={next.href} class="group bg-void/85 p-8 text-right transition-colors duration-500 hover:bg-surface/70">
+          <span class="inline-flex items-center gap-2 font-sans text-[0.7rem] uppercase tracking-[0.18em] text-glow/60">
+            Next
+            <Icon
+              name="arrow-right"
+              class="size-4 transition-transform duration-500 ease-portal group-hover:translate-x-1.5"
+            />
+          </span>
+          <p class="mt-4 font-display text-[1.2rem] font-medium leading-snug text-starlight transition-colors duration-300 group-hover:text-glow">
+            {next.title}
+          </p>
+        </a>
+      ) : null}
+    </nav>
+  )
+}

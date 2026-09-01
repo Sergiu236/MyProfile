@@ -1,0 +1,64 @@
+---
+import PageLayout from "@layouts/PageLayout.astro"
+import PageHeader from "@components/PageHeader.astro"
+import Container from "@components/Container.astro"
+import PostRow from "@components/PostRow.astro"
+import Icon from "@components/Icon.astro"
+import { getPosts, getTags, type Post } from "@lib/content"
+import { slugify } from "@lib/utils"
+
+export async function getStaticPaths() {
+  const posts = await getPosts()
+
+  return getTags(posts).map((tag) => ({
+    params: { tag: tag.slug },
+    props: {
+      label: tag.label,
+      posts: posts.filter((post) => post.data.tags.some((value) => slugify(value) === tag.slug)),
+    },
+  }))
+}
+
+type Props = { label: string; posts: Post[] }
+
+const { label, posts } = Astro.props
+---
+
+<PageLayout
+  title={`#${label} — Blog`}
+  description={`Every post tagged ${label}.`}
+  breadcrumbs={[
+    { name: "Blog", href: "/blog" },
+    { name: `#${label}`, href: `/blog/tag/${slugify(label)}` },
+  ]}
+>
+  <PageHeader
+    kicker="Tagged"
+    title={`#${label}`}
+    description={`Everything written under this tag, newest first.`}
+  >
+    <div class="mt-10 flex flex-wrap items-center gap-6">
+      <a
+        href="/blog"
+        class="group inline-flex items-center gap-2 font-sans text-[0.72rem] uppercase tracking-[0.16em] text-dim transition-colors duration-300 hover:text-glow"
+      >
+        <Icon
+          name="arrow-right"
+          class="size-4 rotate-180 transition-transform duration-500 ease-portal group-hover:-translate-x-1.5"
+        />
+        Every tag
+      </a>
+
+      <p class="font-sans text-[0.72rem] uppercase tracking-[0.16em] text-dim">
+        {posts.length}
+        {posts.length === 1 ? "post" : "posts"}
+      </p>
+    </div>
+  </PageHeader>
+
+  <section class="pb-24">
+    <Container size="wide">
+      {posts.map((post) => <PostRow post={post} />)}
+    </Container>
+  </section>
+</PageLayout>

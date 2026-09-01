@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180">
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="4" stitchTiles="stitch" />
+  </filter>
+  <!-- Opacity is baked in so the grain can be one background layer among
+       the gradients instead of its own composited element. -->
+  <rect width="100%" height="100%" filter="url(#grain)" opacity="0.038" />
+</svg>

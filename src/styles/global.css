@@ -2,185 +2,343 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ══════════════════════════════════════════════════════════════
+   NEON VIOLET ON DEEP SPACE
+
+   Two rules keep this feeling expensive rather than loud:
+   1. The ground is a violet-tinted near-black — never pure #000 and
+      never a muddy grey. Depth comes from tint, not from lightness.
+   2. Saturated violet is reserved for meaning: actions, live state,
+      key numbers, hover. Everything else stays in the neutral ramp.
+   ══════════════════════════════════════════════════════════════ */
 :root {
-  --copy-btn-margin: 10px;
+  --void: #08060e;
+  --surface: #120d1f;
+  --amethyst: #4c3d52;
+  --neon: #b14eff;
+  --neon-deep: #7a2bd4;
+  --ice: #6be9ff;
+  --starlight: #f4f0fa;
+  --mist: #a99dbe;
+
+  --line: rgba(177, 78, 255, 0.12);
+  --line-strong: rgba(177, 78, 255, 0.3);
+
+  --copy-btn-margin: 12px;
+
+  /* Cursor spotlight position, updated by /js/atmosphere.js */
+  --mx: 50%;
+  --my: 0%;
+
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  /* Everything reads one comfortable size larger than a default site */
+  font-size: clamp(16.5px, 12px + 0.55vw, 19px);
 }
 
 @layer base {
-  @font-face {
-    font-family: "Atkinson";
-    src: url("/fonts/atkinson-regular.woff") format("woff");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  html {
+    @apply bg-void text-mist;
+    font-family: theme("fontFamily.sans");
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-y: scroll;
   }
 
-  @font-face {
-    font-family: "Atkinson";
-    src: url("/fonts/atkinson-bold.woff") format("woff");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
-}
-
-html {
-  overflow-y: scroll;
-  color-scheme: light;
-  background-color: white;
-  font-family: "Atkinson", sans-serif;
-
-}
-
-html.dark {
-  color-scheme: dark;
-  background-color: black;
-}
-
-html,
-body {
-  @apply h-full w-full antialiased;
-  @apply bg-white dark:bg-black;
-  @apply text-black/75 dark:text-white/75;
-}
-
-body {
-  @apply relative flex flex-col;
-}
-
-main {
-  @apply flex flex-col flex-1 bg-white dark:bg-black;
-}
-
-header {
-  @apply border-b;
-  @apply transition-all duration-300 ease-in-out;
-}
-
-header:not(.scrolled) {
-  @apply bg-transparent border-transparent;
-}
-
-header.scrolled {
-  @apply bg-white/75 dark:bg-black/50;
-  @apply border-black/10 dark:border-white/25;
-  @apply backdrop-blur-sm saturate-200;
-}
-
-article {
-  @apply prose dark:prose-invert max-w-full pb-12;
-}
-
-.page-heading {
-  @apply font-semibold text-black dark:text-white;
-}
-
-.blend {
-  @apply transition-all duration-300 ease-in-out;
-}
-
-/** Light theme particles on home page */
-@keyframes animateParticle {
-  from {
-    transform: translateY(0px);
+  body {
+    @apply relative flex min-h-full flex-col bg-void text-body text-mist;
   }
 
-  to {
-    transform: translateY(-2000px);
+  main {
+    @apply relative z-10 flex flex-1 flex-col;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-semibold text-starlight;
+  }
+
+  /* Display utilities otherwise beat the UA stylesheet's [hidden] rule */
+  [hidden] {
+    display: none !important;
+  }
+
+  ::selection {
+    background: rgba(177, 78, 255, 0.32);
+    color: var(--starlight);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--neon);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--amethyst);
+    border-radius: 99px;
+    border: 3px solid var(--void);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6b5675;
   }
 }
 
-/** styles for public /animation.js */
-.animate {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 1s ease, transform 1s ease;
+/* ══════════════════════════════════════════════════════════════
+   COMPONENT PRIMITIVES
+   ══════════════════════════════════════════════════════════════ */
+@layer components {
+  /* Small all-caps label that sits above a heading */
+  .eyebrow {
+    @apply text-eyebrow font-medium uppercase text-glow;
+  }
+
+  /* Hairline rule that fades at both ends */
+  .rule {
+    @apply h-px w-full border-0 bg-hairline;
+  }
+
+  /* A plane lifted out of the void. Solid, not frosted — backdrop-filter
+     forces a separate GPU buffer per element and is the most expensive
+     thing you can put on a card. */
+  .plane {
+    @apply relative rounded-2xl border border-[--line] bg-surface/80;
+  }
+
+  /* Understated pill used for tags, stacks and statuses */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-amethyst/70 bg-amethyst/15 px-3 py-1 text-[0.75rem] font-medium tracking-[0.06em] text-mist transition-colors duration-300;
+  }
+  .chip-link:hover {
+    @apply border-glow/60 bg-glow/10 text-starlight;
+  }
+
+  /* Primary action — the one place neon is allowed to shout */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-medium tracking-tight transition-all duration-500 ease-portal;
+  }
+  .btn-primary {
+    @apply bg-glow text-void;
+    box-shadow:
+      0 0 0 1px rgba(177, 78, 255, 0.3),
+      0 14px 44px -14px rgba(177, 78, 255, 0.75);
+  }
+  .btn-primary:hover {
+    @apply bg-glow-faint;
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(177, 78, 255, 0.5),
+      0 22px 60px -14px rgba(177, 78, 255, 0.95);
+  }
+  .btn-ghost {
+    @apply border border-[--line-strong] text-starlight hover:border-glow/70 hover:bg-glow/10;
+  }
+  .btn-ghost:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Link with an underline that grows from the left */
+  .link-glow {
+    @apply relative text-starlight transition-colors duration-300 hover:text-glow;
+  }
+  .link-glow::after {
+    content: "";
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-glow transition-transform duration-500 ease-portal;
+  }
+  .link-glow:hover::after {
+    @apply origin-left scale-x-100;
+  }
+
+  /* Neon text: a tight halo, used on at most one phrase per screen */
+  .neon {
+    color: var(--neon);
+    text-shadow: 0 0 30px rgba(177, 78, 255, 0.55);
+  }
 }
 
-.animate.show {
-  opacity: 1;
-  transform: translateY(0);
+/* ══════════════════════════════════════════════════════════════
+   ATMOSPHERE
+   Radial gradients are soft by nature, so none of this needs
+   filter: blur() — which is what was costing the GPU ~100 MB.
+   ══════════════════════════════════════════════════════════════ */
+
+/* The cursor carries a small pool of violet light */
+.spotlight {
+  background: radial-gradient(
+    32rem 32rem at var(--mx) var(--my),
+    rgba(177, 78, 255, 0.09),
+    transparent 70%
+  );
 }
 
-article img {
-  padding-top: 20px;
-  padding-bottom: 20px;
+/* ── Mobile drawer ─────────────────────────────────────────── */
+#drawer {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#drawer.open {
+  height: 100dvh;
+}
+
+#drawer-button .icon-close,
+#drawer-button.open .icon-menu {
+  display: none;
+}
+#drawer-button.open .icon-close {
   display: block;
-  margin: 0 auto;
 }
 
-/**
- * TWINKLE STARS
- */
-
-#twinkle-star.template {
-  @apply absolute -left-full;
-  /* hide offscreen */
+/* ══════════════════════════════════════════════════════════════
+   SCROLL REVEAL — driven by /js/atmosphere.js
+   ══════════════════════════════════════════════════════════════ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].revealed {
+  opacity: 1;
+  transform: none;
 }
 
-#twinkle-star.twinkle {
-  @apply animate-twinkle;
-  /* defined in tailwind.config */
+/* Hero lines rise into place on load */
+[data-rise] {
+  opacity: 0;
+  transform: translateY(0.5em);
+  animation: rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--rise-delay, 0ms);
+}
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-
-/**
- * Meteors
- */
-
-#meteors .shower {
-  @apply absolute inset-0 top-0;
-  ;
-  @apply left-1/2 -translate-x-1/2;
-  @apply w-screen aspect-square;
+/* ══════════════════════════════════════════════════════════════
+   PROSE — long-form reading inside the void
+   ══════════════════════════════════════════════════════════════ */
+.article {
+  @apply prose prose-invert max-w-prose;
+  --tw-prose-body: #a99dbe;
+  --tw-prose-headings: #f4f0fa;
+  --tw-prose-lead: #c4b9d6;
+  --tw-prose-links: #b14eff;
+  --tw-prose-bold: #f4f0fa;
+  --tw-prose-counters: #766b8a;
+  --tw-prose-bullets: #4c3d52;
+  --tw-prose-hr: rgba(177, 78, 255, 0.16);
+  --tw-prose-quotes: #f4f0fa;
+  --tw-prose-quote-borders: #b14eff;
+  --tw-prose-captions: #766b8a;
+  --tw-prose-code: #ddb4ff;
+  --tw-prose-pre-code: #ddd4ec;
+  --tw-prose-pre-bg: #0c0916;
+  --tw-prose-th-borders: #4c3d52;
+  --tw-prose-td-borders: rgba(177, 78, 255, 0.14);
+  font-size: 1.0625rem;
+  line-height: 1.8;
 }
 
-#meteors .meteor {
-  @apply animate-meteor;
-  /* defined in tailwind.config */
-  @apply absolute top-1/2 left-1/2 w-px h-[75vh];
-  @apply bg-gradient-to-b from-white to-transparent;
+.article :is(h1, h2, h3) {
+  @apply font-semibold;
+}
+.article h2 {
+  @apply mt-14 text-h2;
+}
+.article h3 {
+  @apply mt-10 text-h3;
 }
 
-#meteors .shower.ur {
-  @apply rotate-45;
+.article a {
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  @apply decoration-glow/40 transition-colors hover:decoration-glow;
 }
 
-#meteors .shower.dr {
-  @apply rotate-135;
+.article blockquote {
+  @apply border-l-2 pl-6 font-normal not-italic;
+  font-size: 1.2rem;
+  line-height: 1.6;
 }
 
-#meteors .shower.dl {
-  @apply rotate-225;
+.article pre {
+  @apply relative rounded-xl border border-[--line];
+  font-size: 0.9rem;
 }
 
-#meteors .shower.ul {
-  @apply rotate-315;
+.article :is(pre, code) {
+  font-family: theme("fontFamily.mono");
 }
 
+.article :not(pre) > code {
+  @apply rounded border border-[--line] bg-glow/10 px-1.5 py-0.5 text-[0.85em];
+}
+.article :not(pre) > code::before,
+.article :not(pre) > code::after {
+  content: "";
+}
+
+.article img {
+  @apply my-10 rounded-2xl border border-[--line];
+}
+
+.article hr {
+  @apply my-14;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CODE BLOCK COPY BUTTON (public/js/copy.js)
+   ══════════════════════════════════════════════════════════════ */
 .copy-cnt {
   @apply absolute w-full;
   top: var(--copy-btn-margin);
 }
-
 .copy-btn {
-  @apply w-[30px] fixed;
+  @apply fixed w-[30px];
   left: calc(100% - var(--copy-btn-margin));
   transform: translateX(-100%);
 }
-
 .copy-svg {
-  @apply w-full aspect-square text-white opacity-70 hover:opacity-90;
+  @apply aspect-square w-full text-glow opacity-50 transition-opacity hover:opacity-100;
 }
 
-/* Card transition */
-/* .fade-move-enter-active,
-.fade-move-exit-active {
-  transition: all 300ms ease;
-}
+/* ══════════════════════════════════════════════════════════════
+   ACCESSIBILITY — honour reduced motion everywhere
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
 
-.fade-move-enter-from,
-.fade-move-exit-to {
-  opacity: 0;
-  transform: translateY(10px);
-} */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  [data-reveal],
+  [data-rise] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .spotlight {
+    display: none;
+  }
+}

@@ -1,0 +1,159 @@
+---
+import type { MarkdownInstance } from "astro"
+import type { Role } from "@lib/content"
+import { formatDuration, formatMonthYear, isoDate } from "@lib/utils"
+import Icon from "@components/Icon.astro"
+
+type Entry = Role & { Content: MarkdownInstance<Record<string, never>>["Content"] }
+
+type Props = {
+  roles: Entry[]
+}
+
+const { roles } = Astro.props
+const isCurrent = (end: Date | string) => typeof end === "string"
+---
+
+<ol class="relative">
+  <!-- The spine: a thread of light running through the whole career -->
+  <div
+    class="beam pointer-events-none absolute bottom-0 left-[7px] top-2 w-px lg:left-[calc(12rem+7px)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  {
+    roles.map((role) => {
+      const current = isCurrent(role.data.dateEnd)
+
+      return (
+        <li class="relative pb-20 pl-10 last:pb-0 lg:grid lg:grid-cols-[12rem_1fr] lg:gap-x-10 lg:pl-0" data-reveal>
+          {/* ── Meta column: the answers a recruiter wants first ── */}
+          <div class="lg:pr-8 lg:text-right">
+            <p class="font-sans text-[0.8rem] uppercase tracking-[0.12em] text-starlight">
+              <time datetime={isoDate(role.data.dateStart)}>
+                {formatMonthYear(role.data.dateStart)}
+              </time>
+              <span class="text-glow/50"> → </span>
+              {current ? (
+                <span class="text-glow">Present</span>
+              ) : (
+                <time datetime={isoDate(role.data.dateEnd)}>
+                  {formatMonthYear(role.data.dateEnd)}
+                </time>
+              )}
+            </p>
+
+            <p class="mt-2 font-sans text-[0.72rem] uppercase tracking-[0.12em] text-dim">
+              {formatDuration(role.data.dateStart, role.data.dateEnd)}
+            </p>
+
+            <p class="mt-4 flex items-center gap-1.5 text-[0.8rem] text-dim lg:justify-end">
+              <Icon name="map-pin" class="size-3.5 shrink-0" />
+              <span class="whitespace-nowrap">{role.data.location}</span>
+            </p>
+
+            <p class="mt-1.5 font-sans text-[0.7rem] uppercase tracking-[0.12em] text-dim">
+              {role.data.type}
+            </p>
+          </div>
+
+          {/* ── Node on the spine ── */}
+          <span
+            class="absolute left-0 top-1.5 grid size-[15px] place-items-center lg:left-[12rem]"
+            aria-hidden="true"
+          >
+            {current && (
+              <span class="absolute size-[15px] animate-ping rounded-full bg-glow/40" />
+            )}
+            <span
+              class={
+                current
+                  ? "relative size-[11px] rounded-full bg-glow shadow-[0_0_14px_4px_rgba(177,78,255,.5)]"
+                  : "relative size-[11px] rounded-full border border-glow/50 bg-void"
+              }
+            />
+          </span>
+
+          {/* ── The role itself ── */}
+          <div class="mt-8 lg:mt-0">
+            <div class="flex flex-wrap items-center gap-3">
+              <h2 class="text-h3 text-starlight">
+                {role.data.url ? (
+                  <a
+                    href={role.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="link-glow"
+                  >
+                    {role.data.company}
+                  </a>
+                ) : (
+                  role.data.company
+                )}
+              </h2>
+
+              {current && (
+                <span class="inline-flex items-center gap-1.5 rounded-full border border-nebula/40 bg-nebula/10 px-2.5 py-1 font-sans text-[0.65rem] uppercase tracking-[0.16em] text-nebula">
+                  <span class="size-1.5 rounded-full bg-nebula" />
+                  Current
+                </span>
+              )}
+            </div>
+
+            <p class="mt-1.5 font-sans text-[0.85rem] uppercase tracking-[0.1em] text-glow/80">
+              {role.data.role}
+            </p>
+
+            <p class="mt-5 max-w-2xl text-[1.02rem] leading-relaxed text-mist">
+              {role.data.context}
+            </p>
+
+            {/* Headline numbers for this role */}
+            {role.data.metrics.length > 0 && (
+              <ul class="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-[--line] bg-[--line] sm:grid-cols-4">
+                {role.data.metrics.map((metric) => (
+                  <li class="bg-void/85 px-4 py-5 text-center">
+                    <p class="font-display text-[1.7rem] font-semibold leading-none tracking-[-0.02em] text-glow">{metric.value}</p>
+                    <p class="mt-2 text-[0.75rem] leading-snug text-dim">{metric.label}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* What actually changed — one paragraph per achievement */}
+            <div class="impact mt-8 max-w-2xl space-y-5">
+              <role.Content />
+            </div>
+
+            {/* Tools of the trade */}
+            {role.data.stack.length > 0 && (
+              <ul class="mt-8 flex flex-wrap gap-2">
+                {role.data.stack.map((item) => (
+                  <li class="chip">{item}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </li>
+      )
+    })
+  }
+</ol>
+
+<style>
+  /* Each paragraph of a role's body is one impact statement, marked
+     with a small amethyst node so the list scans instantly. */
+  .impact :global(p) {
+    @apply relative pl-7 text-[1.02rem] leading-relaxed text-mist;
+  }
+
+  .impact :global(p)::before {
+    content: "";
+    @apply absolute left-0 top-[0.62em] size-2 rotate-45 border border-glow/60 bg-glow/20;
+  }
+
+  .impact :global(strong) {
+    @apply font-semibold text-starlight;
+  }
+</style>

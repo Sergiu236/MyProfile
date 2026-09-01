@@ -1,30 +1,24 @@
 import rss from "@astrojs/rss"
-import { getCollection } from "astro:content"
-import { SITE } from "@consts"
+import type { APIContext } from "astro"
+import { SITE, getSection } from "@consts"
+import { getPosts } from "@lib/content"
 
-type Context = {
-  site: string
-}
-
-export async function GET(context: Context) {
-	const posts = await getCollection("blog")
-  const projects = await getCollection("projects")
-
-  const items = [...posts, ...projects]
-
-  items.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+export async function GET(context: APIContext) {
+  const posts = await getPosts()
 
   return rss({
-    title: SITE.TITLE,
+    title: `${SITE.TITLE} — ${SITE.ROLE}`,
     description: SITE.DESCRIPTION,
-    site: context.site,
-    items: items.map((item) => ({
-      title: item.data.title,
-      description: item.data.summary,
-      pubDate: item.data.date,
-      link: item.slug.startsWith("blog")
-        ? `/blog/${item.slug}/`
-        : `/projects/${item.slug}/`,
+    site: context.site!,
+    items: posts.map((post) => ({
+      title: post.data.title,
+      description: post.data.summary,
+      pubDate: post.data.date,
+      categories: [getSection(post.data.section)?.LABEL, ...post.data.tags].filter(
+        (value): value is string => Boolean(value),
+      ),
+      link: `/blog/${post.slug}/`,
     })),
+    customData: "<language>en</language>",
   })
 }

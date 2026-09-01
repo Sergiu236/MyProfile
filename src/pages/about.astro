@@ -1,0 +1,147 @@
+---
+import PageLayout from "@layouts/PageLayout.astro"
+import PageHeader from "@components/PageHeader.astro"
+import Container from "@components/Container.astro"
+import Portrait from "@components/Portrait.astro"
+import StackGrid from "@components/StackGrid.astro"
+import Icon from "@components/Icon.astro"
+import { ABOUT, SITE } from "@consts"
+
+const principles = [
+  {
+    icon: "layers",
+    title: "Structure before cleverness",
+    body: "Most bugs are design decisions arriving late. Get the boundaries right — domain, application, infrastructure — and the clever part usually turns out to be unnecessary.",
+  },
+  {
+    icon: "git-branch",
+    title: "If it is not automated, it is not done",
+    body: "A deploy that needs a person to remember something is an outage with a delay on it. Pipelines, migrations and releases belong in code, reviewed like code.",
+  },
+  {
+    icon: "shield",
+    title: "Prove it, do not promise it",
+    body: "Whether it is a Merkle proof on-chain or a conservation law in a loss function, I would rather make correctness structural than hope it holds at runtime.",
+  },
+  {
+    icon: "users",
+    title: "Explaining is the real test",
+    body: "Three years of tutoring taught me that if I cannot walk someone through a decision, I do not understand it well enough to defend it in a design review.",
+  },
+]
+---
+
+<PageLayout
+  title={ABOUT.TITLE}
+  description={ABOUT.DESCRIPTION}
+  breadcrumbs={[{ name: ABOUT.TITLE, href: "/about" }]}
+>
+  <PageHeader
+    kicker={ABOUT.KICKER}
+    title="I build the layer people never see, and feel every day."
+    description={ABOUT.DESCRIPTION}
+  />
+
+  <!-- ── Narrative ──────────────────────────────────────────── -->
+  <section class="pb-24">
+    <Container size="wide">
+      <div class="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <!-- Portrait rail -->
+        <div class="lg:sticky lg:top-32 lg:self-start">
+          <div class="mx-auto w-full max-w-[20rem]" data-reveal>
+            <Portrait />
+          </div>
+
+          <ul class="mt-10 space-y-4" data-reveal>
+            <li class="flex items-center gap-3 text-mist">
+              <Icon name="map-pin" class="size-4 text-glow/60" />
+              {SITE.LOCATION}
+            </li>
+            <li class="flex items-center gap-3 text-mist">
+              <Icon name="terminal" class="size-4 text-glow/60" />
+              {SITE.ROLE}
+            </li>
+            <li class="flex items-center gap-3 text-mist">
+              <Icon name="zap" class="size-4 text-glow/60" />
+              {SITE.AVAILABILITY}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Words -->
+        <div class="space-y-8" data-reveal>
+          <p class="text-[clamp(1.35rem,1rem+1.2vw,1.9rem)] leading-[1.45] text-starlight">
+            <span class="neon font-semibold">I am a software engineer</span> working on
+            the unglamorous half of software: the systems that run a business every day and cannot
+            be switched off while you improve them.
+          </p>
+
+          <p class="text-body-lg leading-relaxed text-mist">
+            Right now that means <strong class="font-semibold text-starlight">TSS Yonder</strong>,
+            where a Dealer Management System used by more than 750 automotive businesses across
+            Western Europe is moving off a VB6 desktop application and onto a cloud-native .NET
+            platform. I led that migration to React and ASP.NET Core, provisioned the AWS estate from
+            scratch with CDK, and split the core APIs, time tracking and document processing into
+            Fargate microservices. It now carries 23,000+ transactions a day and over a thousand
+            concurrent users, and deploys land without anyone watching a dashboard with their jaw
+            clenched.
+          </p>
+
+          <p class="text-body-lg leading-relaxed text-mist">
+            Before that, at <strong class="font-semibold text-starlight">Accounting System
+            Development</strong>, I built a .NET desktop application on Avalonia UI, EF Core and
+            PostgreSQL that took a document workflow the team had been running by hand every day —
+            ingestion, generation, routing, reporting — and automated it end to end.
+          </p>
+
+          <p class="text-body-lg leading-relaxed text-mist">
+            The work I choose outside of production tends to have a hard edge of correctness to it.
+            A nine-contract Ethereum voting system behind upgradeable proxies, where double-voting
+            has to be impossible rather than discouraged. A Hamiltonian neural network that learns
+            engine dynamics without ever inventing energy, because the conservation law is built
+            into the architecture instead of the loss function. Different domains, one instinct:
+            make the guarantee structural.
+          </p>
+
+          <p class="text-body-lg leading-relaxed text-mist">
+            I am also, on evenings, a tutor — preparing candidates for the Babeș-Bolyai Computer
+            Science admission exam in algorithms, data structures and logic. It is the best code
+            review practice I have ever found.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- ── How I work ─────────────────────────────────────────── -->
+  <section class="pb-24">
+    <Container size="wide">
+      <div class="rule mb-16" data-reveal></div>
+      <p class="eyebrow" data-reveal>How I work</p>
+
+      <ul class="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] sm:grid-cols-2" data-reveal-stagger="100">
+        {
+          principles.map((principle) => (
+            <li class="group bg-void/85 p-9 transition-colors duration-500 hover:bg-surface/60" data-reveal>
+              <Icon
+                name={principle.icon}
+                class="size-6 text-glow/60 transition-colors duration-500 group-hover:text-glow"
+              />
+              <h2 class="mt-6 text-h3 text-starlight">{principle.title}</h2>
+              <p class="mt-4 leading-relaxed text-mist">{principle.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </section>
+
+  <!-- ── Stack ──────────────────────────────────────────────── -->
+  <section class="pb-24">
+    <Container size="wide">
+      <p class="eyebrow mb-12" data-reveal>Instruments</p>
+      <StackGrid />
+    </Container>
+  </section>
+
+</PageLayout>

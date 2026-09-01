@@ -1,0 +1,37 @@
+---
+import Icon from "@components/Icon.astro"
+
+type Props = {
+  kicker: string
+  title: string
+  /** Optional "see everything" link on the right */
+  href?: string
+  linkText?: string
+}
+
+const { kicker, title, href, linkText = "View all" } = Astro.props
+---
+
+<div class="flex flex-wrap items-end justify-between gap-6" data-reveal>
+  <div>
+    <p class="eyebrow">{kicker}</p>
+    <h2 class="mt-4 text-h2">{title}</h2>
+  </div>
+
+  {
+    href && (
+      <a
+        href={href}
+        class="group inline-flex items-center gap-2 whitespace-nowrap font-sans text-[0.78rem] uppercase tracking-[0.16em] text-mist transition-colors duration-300 hover:text-glow"
+      >
+        {linkText}
+        <Icon
+          name="arrow-right"
+          class="size-4 transition-transform duration-500 ease-portal group-hover:translate-x-1.5"
+        />
+      </a>
+    )
+  }
+</div>
+
+<div class="mt-8 rule" data-reveal></div>

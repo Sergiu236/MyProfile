@@ -1,0 +1,57 @@
+---
+import { SITE, SOCIALS } from "@consts"
+import Container from "@components/Container.astro"
+import Icon from "@components/Icon.astro"
+---
+
+<section class="relative mt-32 overflow-hidden py-28">
+  <!-- A gate of light at the end of the journey -->
+  <div
+    class="pointer-events-none absolute inset-0 -z-10"
+    style="background: radial-gradient(60% 100% at 50% 100%, rgba(122,43,212,.3), transparent 70%);"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-hairline" aria-hidden="true"></div>
+
+  <Container size="default" class="text-center">
+    <p class="eyebrow" data-reveal>The channel is open</p>
+
+    <h2 class="mx-auto mt-6 max-w-3xl text-h1" data-reveal>
+      Have a system that needs to
+      <em class="neon not-italic">scale past what it was built for?</em>
+    </h2>
+
+    <p class="mx-auto mt-7 max-w-xl text-lead text-mist" data-reveal>
+      {SITE.AVAILABILITY}. Cluj-Napoca, or anywhere with a decent connection.
+    </p>
+
+    <div class="mt-12 flex flex-wrap items-center justify-center gap-4" data-reveal>
+      <a href={`mailto:${SITE.EMAIL}`} class="btn btn-primary" data-magnetic="0.18">
+        <Icon name="mail" class="size-4" />
+        {SITE.EMAIL}
+      </a>
+
+      <a href={SITE.CV} download class="btn btn-ghost" data-magnetic="0.18">
+        <Icon name="download" class="size-4" />
+        Download CV
+      </a>
+    </div>
+
+    <div class="mt-12 flex items-center justify-center gap-3" data-reveal>
+      {
+        SOCIALS.filter((social) => social.ICON !== "mail").map((social) => (
+          <a
+            href={social.HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.NAME}
+            class="grid size-12 place-items-center rounded-full border border-[--line] text-mist transition-all duration-500 ease-portal hover:-translate-y-1 hover:border-glow/50 hover:text-glow"
+          >
+            <Icon name={social.ICON} sprite="social" />
+          </a>
+        ))
+      }
+    </div>
+  </Container>
+</section>

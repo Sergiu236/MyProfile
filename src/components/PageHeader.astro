@@ -1,0 +1,42 @@
+---
+import Container from "@components/Container.astro"
+
+type Props = {
+  /** Small monospaced line above the title */
+  kicker: string
+  title: string
+  description?: string
+}
+
+const { kicker, title, description } = Astro.props
+---
+
+<section class="relative pb-14 pt-40 sm:pt-48">
+  <!-- A horizon of light behind the title, as if the page is cresting a planet -->
+  <div
+    class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 opacity-70"
+    style="background: radial-gradient(60% 100% at 50% 0%, rgba(177,78,255,.16), transparent 70%);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <Container size="wide">
+    <p class="eyebrow" data-rise style="--rise-delay: 0ms">{kicker}</p>
+
+    <h1 class="mt-5 max-w-4xl text-h1" data-rise style="--rise-delay: 80ms">
+      {title}
+    </h1>
+
+    {
+      description && (
+        <p class="mt-6 max-w-2xl text-lead text-mist" data-rise style="--rise-delay: 160ms">
+          {description}
+        </p>
+      )
+    }
+
+    <div class="mt-12 rule" data-rise style="--rise-delay: 240ms"></div>
+
+    <slot />
+  </Container>
+</section>

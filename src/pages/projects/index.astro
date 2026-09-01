@@ -1,47 +1,29 @@
 ---
-import { getCollection } from "astro:content";
-import PageLayout from "@layouts/PageLayout.astro";
-import TopLayout from "@layouts/TopLayout.astro";
-import BottomLayout from "@layouts/BottomLayout.astro";
-import SearchCollection from "@components/SearchCollection";
-import { PROJECTS } from "@consts";
-import type { CollectionEntry } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro"
+import PageHeader from "@components/PageHeader.astro"
+import Container from "@components/Container.astro"
+import ProjectCard from "@components/ProjectCard.astro"
+import { PROJECTS } from "@consts"
+import { getProjects } from "@lib/content"
 
-const projects = (await getCollection("projects"))
-  .filter((project) => !project.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-const tags = [
-  ...new Set(projects.flatMap((project) => project.data.tags)),
-].sort((a, b) => a.localeCompare(b));
-
-const estimated_initial_size =
-  28 + projects.length * 158 + (projects.length - 1) * 12;
+const projects = await getProjects()
 ---
 
-<PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
-  <TopLayout>
-    <div class="animate">
-      <h1 class="text-3xl font-semibold text-black dark:text-white mt-2">
-        {PROJECTS.TITLE}
-      </h1>
-      <div class="mt-1">
-        {PROJECTS.DESCRIPTION}
-      </div>
-    </div>
-  </TopLayout>
-  <BottomLayout>
-    <div
-      id="search-collection-wrapper"
-      class="animate"
-      style={{ minHeight: `${estimated_initial_size}px` }}
-    >
-      <SearchCollection
-        client:load
-        entry_name={"projects"}
-        tags={tags}
-        data={projects}
-      />
-    </div>
-  </BottomLayout>
+<PageLayout
+  title={PROJECTS.TITLE}
+  description={PROJECTS.DESCRIPTION}
+  breadcrumbs={[{ name: PROJECTS.TITLE, href: "/projects" }]}
+>
+  <PageHeader
+    kicker={PROJECTS.KICKER}
+    title="Things I built because the problem would not leave me alone."
+    description={PROJECTS.DESCRIPTION}
+  />
+
+  <section class="pb-16">
+    <Container size="wide">
+      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+    </Container>
+  </section>
+
 </PageLayout>

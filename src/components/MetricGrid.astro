@@ -1,0 +1,41 @@
+---
+import Icon from "@components/Icon.astro"
+import type { Metric } from "@types"
+
+type Props = {
+  metrics: Metric[]
+}
+
+const { metrics } = Astro.props
+---
+
+<ul
+  class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] lg:grid-cols-4"
+  data-reveal-stagger="110"
+>
+  {
+    metrics.map((metric) => (
+      <li
+        class="group relative bg-void/85 p-7 transition-colors duration-500 hover:bg-surface/70"
+        data-reveal
+      >
+        {/* A pool of light that gathers under the number on hover */}
+        <div
+          class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+          style="background: radial-gradient(80% 80% at 50% 100%, rgba(177,78,255,.14), transparent 70%);"
+        />
+
+        <Icon
+          name={metric.ICON}
+          class="relative size-5 text-glow/60 transition-colors duration-500 group-hover:text-glow"
+        />
+
+        <p class="relative mt-6 font-display text-[clamp(2.2rem,4vw,3.2rem)] font-semibold leading-none tracking-[-0.03em] text-starlight">
+          {metric.VALUE}
+        </p>
+
+        <p class="relative mt-3 text-[0.88rem] leading-snug text-dim">{metric.LABEL}</p>
+      </li>
+    ))
+  }
+</ul>

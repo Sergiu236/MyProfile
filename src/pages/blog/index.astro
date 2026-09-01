@@ -1,46 +1,266 @@
 ---
-import { getCollection } from "astro:content";
-import PageLayout from "@layouts/PageLayout.astro";
-import TopLayout from "@layouts/TopLayout.astro";
-import BottomLayout from "@layouts/BottomLayout.astro";
-import SearchCollection from "@components/SearchCollection";
-import { BLOG } from "@consts";
+import PageLayout from "@layouts/PageLayout.astro"
+import PageHeader from "@components/PageHeader.astro"
+import Container from "@components/Container.astro"
+import FeaturedPost from "@components/FeaturedPost.astro"
+import PostRow from "@components/PostRow.astro"
+import Icon from "@components/Icon.astro"
+import { BLOG } from "@consts"
+import { getFeatured, getPosts, getSectionsInUse, getTags } from "@lib/content"
 
-const posts = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = await getPosts()
+const featured = getFeatured(posts)
 
-const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort(
-  (a, b) => a.localeCompare(b),
-);
-
-const estimated_initial_size =
-  28 + posts.length * 158 + (posts.length - 1) * 12;
+// The lead story is shown above the list, so it is not repeated inside it.
+// Every count below is derived from `listed` so the facets always describe
+// exactly what filtering them will produce.
+const listed = posts.filter((post) => post.slug !== featured?.slug)
+const sections = getSectionsInUse(listed)
+const tags = getTags(listed)
 ---
 
-<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
-  <TopLayout>
-    <div class="animate">
-      <h1 class="text-3xl font-semibold text-black dark:text-white mt-2">
-        {BLOG.TITLE}
-      </h1>
-      <div class="mt-1">
-        {BLOG.DESCRIPTION}
+<PageLayout
+  title={BLOG.TITLE}
+  description={BLOG.DESCRIPTION}
+  breadcrumbs={[{ name: BLOG.TITLE, href: "/blog" }]}
+>
+  <PageHeader
+    kicker={BLOG.KICKER}
+    title="Notes from inside the machine."
+    description={BLOG.DESCRIPTION}
+  />
+
+  {
+    featured && (
+      <section id="featured" class="pb-20">
+        <Container size="wide">
+          <FeaturedPost post={featured} />
+        </Container>
+      </section>
+    )
+  }
+
+  <!-- ══════════════════════════════════════════════════════════
+       THE ARCHIVE — search, sections and tags, all client-side
+       ══════════════════════════════════════════════════════════ -->
+  <section class="pb-16">
+    <Container size="wide">
+      <div id="archive" data-reveal>
+        <!-- Search: a line of light, not a box -->
+        <div class="group relative">
+          <Icon
+            name="search"
+            class="pointer-events-none absolute left-0 top-1/2 size-5 -translate-y-1/2 text-dim transition-colors duration-300 group-focus-within:text-glow"
+          />
+          <input
+            id="archive-search"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search the archive…"
+            aria-label="Search posts"
+            class="w-full border-0 border-b border-[--line] bg-transparent py-5 pl-9 pr-4 text-lead text-starlight outline-none transition-colors duration-300 placeholder:text-dim focus:border-glow/60 focus:ring-0"
+          />
+        </div>
+
+        <!-- Sections -->
+        <div class="mt-10">
+          <p class="eyebrow">Sections</p>
+          <div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Filter by section">
+            <button
+              type="button"
+              class="facet facet-section is-active"
+              data-section="all"
+              aria-pressed="true"
+            >
+              All
+              <span class="facet-count">{listed.length}</span>
+            </button>
+
+            {
+              sections.map((section) => (
+                <button
+                  type="button"
+                  class="facet facet-section"
+                  data-section={section.ID}
+                  aria-pressed="false"
+                >
+                  <Icon name={section.ICON} class="size-3.5" />
+                  {section.LABEL}
+                  <span class="facet-count">{section.COUNT}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="mt-9">
+          <div class="flex items-center justify-between gap-4">
+            <p class="eyebrow">Tags</p>
+            <button
+              id="archive-clear"
+              type="button"
+              hidden
+              class="inline-flex items-center gap-1.5 font-sans text-[0.7rem] uppercase tracking-[0.14em] text-dim transition-colors duration-300 hover:text-glow"
+            >
+              <Icon name="x" class="size-3.5" />
+              Clear filters
+            </button>
+          </div>
+
+          <div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Filter by tag">
+            {
+              tags.map((tag) => (
+                <button type="button" class="facet facet-tag" data-tag={tag.slug} aria-pressed="false">
+                  #{tag.label}
+                  <span class="facet-count">{tag.count}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Result count -->
+        <p
+          id="archive-count"
+          class="mt-12 font-sans text-[0.72rem] uppercase tracking-[0.16em] text-dim"
+          aria-live="polite"
+        >
+          Showing all {listed.length} posts
+        </p>
       </div>
-    </div>
-  </TopLayout>
-  <BottomLayout>
-    <div
-      id="search-collection-wrapper"
-      class="animate"
-      style={{ minHeight: `${estimated_initial_size}px` }}
-    >
-      <SearchCollection
-        client:load
-        entry_name={"posts"}
-        tags={tags}
-        data={posts}
-      />
-    </div>
-  </BottomLayout>
+
+      <!-- Rows -->
+      <div id="archive-list" class="mt-6">
+        {listed.map((post) => <PostRow post={post} filterable />)}
+      </div>
+
+      <!-- Nothing matched -->
+      <div id="archive-empty" hidden class="border-t border-[--line] py-24 text-center">
+        <p class="font-display text-h3 text-starlight">Nothing out here yet.</p>
+        <p class="mt-3 text-mist">Try a different word, or clear the filters.</p>
+      </div>
+    </Container>
+  </section>
 </PageLayout>
+
+<style>
+  /* Facet pills: understated until chosen, then lit */
+  :global(.facet) {
+    @apply inline-flex items-center gap-2 rounded-full border border-[--line] bg-void/40 px-4 py-2
+           font-sans text-[0.72rem] uppercase tracking-[0.12em] text-mist
+           transition-all duration-300 ease-portal;
+  }
+
+  :global(.facet:hover) {
+    @apply border-glow/40 bg-glow/10 text-starlight;
+  }
+
+  :global(.facet.is-active) {
+    @apply border-glow/60 bg-glow/15 text-starlight;
+    box-shadow: 0 0 24px -6px rgba(177, 78, 255, 0.5);
+  }
+
+  :global(.facet-count) {
+    @apply text-[0.65rem] text-dim;
+  }
+
+  :global(.facet.is-active .facet-count) {
+    @apply text-glow;
+  }
+</style>
+
+<script>
+  /**
+   * Client-side faceting over server-rendered rows.
+   * Every post is already in the HTML — this only decides what stays visible,
+   * so the archive scales to hundreds of posts with no framework and no fetch.
+   */
+  function initArchive() {
+    const root = document.getElementById("archive")
+    const list = document.getElementById("archive-list")
+    const empty = document.getElementById("archive-empty")
+    const count = document.getElementById("archive-count")
+    const featured = document.getElementById("featured")
+    const search = document.getElementById("archive-search") as HTMLInputElement | null
+    const clear = document.getElementById("archive-clear")
+    if (!root || !list || !empty || !count || !search || !clear) return
+
+    const rows = Array.from(list.querySelectorAll<HTMLElement>(".post-row"))
+    const sectionButtons = Array.from(root.querySelectorAll<HTMLElement>(".facet-section"))
+    const tagButtons = Array.from(root.querySelectorAll<HTMLElement>(".facet-tag"))
+
+    let query = ""
+    let section = "all"
+    const tags = new Set<string>()
+
+    const setActive = (button: HTMLElement, active: boolean) => {
+      button.classList.toggle("is-active", active)
+      button.setAttribute("aria-pressed", String(active))
+    }
+
+    const apply = () => {
+      let visible = 0
+
+      for (const row of rows) {
+        const matchesSection = section === "all" || row.dataset.section === section
+        const rowTags = (row.dataset.tags ?? "").split(" ")
+        const matchesTags = [...tags].every((tag) => rowTags.includes(tag))
+        const matchesQuery = !query || (row.dataset.search ?? "").includes(query)
+
+        const show = matchesSection && matchesTags && matchesQuery
+        row.hidden = !show
+        if (show) visible += 1
+      }
+
+      const filtering = section !== "all" || tags.size > 0 || query !== ""
+
+      count.textContent = filtering
+        ? `Showing ${visible} of ${rows.length} posts`
+        : `Showing all ${rows.length} posts`
+      empty.hidden = visible > 0
+      clear.hidden = !filtering
+      // The lead story is unfiltered by nature, so it steps aside during a search
+      if (featured) featured.hidden = filtering
+    }
+
+    search.addEventListener("input", () => {
+      query = search.value.trim().toLowerCase()
+      apply()
+    })
+
+    for (const button of sectionButtons) {
+      button.addEventListener("click", () => {
+        section = button.dataset.section ?? "all"
+        sectionButtons.forEach((other) => setActive(other, other === button))
+        apply()
+      })
+    }
+
+    for (const button of tagButtons) {
+      button.addEventListener("click", () => {
+        const tag = button.dataset.tag
+        if (!tag) return
+        const active = !tags.has(tag)
+        active ? tags.add(tag) : tags.delete(tag)
+        setActive(button, active)
+        apply()
+      })
+    }
+
+    clear.addEventListener("click", () => {
+      query = ""
+      section = "all"
+      tags.clear()
+      search.value = ""
+      sectionButtons.forEach((button) => setActive(button, button.dataset.section === "all"))
+      tagButtons.forEach((button) => setActive(button, false))
+      apply()
+    })
+
+    apply()
+  }
+
+  document.addEventListener("astro:page-load", initArchive)
+</script>

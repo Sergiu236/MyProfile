@@ -1,103 +1,116 @@
 ---
-import { SITE, LINKS } from "@consts"
+import { LINKS, SITE } from "@consts"
 import { cn } from "@lib/utils"
-const { pathname } = Astro.url
-const subpath = pathname.match(/[^/]+/g)
 import Container from "@components/Container.astro"
+import Icon from "@components/Icon.astro"
+
+const { pathname } = Astro.url
+const root = "/" + (pathname.match(/[^/]+/g)?.[0] ?? "")
+const isActive = (href: string) => pathname === href || root === href
 ---
 
-<header id="header" class="fixed top-0 w-full h-16 z-50 ">
-  <Container size="md">
-    <div class="relative h-full w-full">
-      <div class="absolute left-0 top-1/2 -translate-y-1/2 flex gap-1 font-semibold">
-        <a href="/" class="flex gap-1 text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
-          <svg class="size-6 fill-current">
-            <use href="/brand.svg#brand"></use>
-          </svg>
-          <div>
-            {SITE.TITLE}
-          </div>
-        </a>
-      </div>
+<!-- Reading progress: a thread of light across the top of the world -->
+<div
+  id="progress"
+  class="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left scale-x-0 bg-gradient-to-r from-glow-deep via-glow to-nebula"
+>
+</div>
 
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <nav class="hidden md:flex items-center justify-center text-sm gap-1">
+<header
+  id="header"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-500 ease-portal"
+>
+  <Container size="wide" class="flex h-20 items-center justify-between gap-4">
+    <!-- Sigil + name -->
+    <a
+      href="/"
+      class="group flex items-center gap-3"
+      aria-label={`${SITE.TITLE} — home`}
+    >
+      <span class="relative grid size-9 place-items-center">
+        <span
+          class="absolute inset-1 rounded-full opacity-70 transition-opacity duration-700 group-hover:opacity-100"
+          style="box-shadow: 0 0 22px 2px rgba(177,78,255,.55);"
+        ></span>
+        <Icon
+          name="brand"
+          sprite="brand"
+          class="relative size-9 text-glow transition-transform duration-700 ease-portal group-hover:rotate-[120deg]"
+        />
+      </span>
+      <span class="leading-none">
+        <span class="block font-display text-[1.15rem] font-semibold tracking-[-0.02em] text-starlight">Sergiu Mocan</span>
+        <span class="mt-1 hidden font-sans text-[0.62rem] uppercase tracking-[0.22em] text-glow/80 sm:block">
+          .NET · AWS
+        </span>
+      </span>
+    </a>
+
+    <!-- Primary navigation -->
+    <nav class="hidden lg:block" aria-label="Primary">
+      <ul
+        class="flex items-center gap-1 rounded-full border border-[--line] bg-void/50 p-1.5"
+      >
         {
-          LINKS.map((LINK) => (
-            <a href={LINK.HREF} class={cn("h-8 rounded-full px-3 text-current", "flex items-center justify-center", "transition-colors duration-300 ease-in-out", pathname === LINK.HREF || "/" + subpath?.[0] === LINK.HREF ? "bg-black dark:bg-white text-white dark:text-black" : "hover:bg-black/5 dark:hover:bg-white/20 hover:text-black dark:hover:text-white")}>
-              {LINK.TEXT}
-            </a>
+          LINKS.map((link) => (
+            <li>
+              <a
+                href={link.HREF}
+                aria-current={isActive(link.HREF) ? "page" : undefined}
+                class={cn(
+                  "relative flex h-9 items-center rounded-full px-4 text-[0.92rem] transition-colors duration-300",
+                  isActive(link.HREF)
+                    ? "bg-glow/15 text-starlight"
+                    : "text-mist hover:bg-glow/10 hover:text-starlight",
+                )}
+              >
+                {isActive(link.HREF) && (
+                  <span class="absolute inset-0 rounded-full ring-1 ring-inset ring-glow/30" />
+                )}
+                {link.TEXT}
+              </a>
+            </li>
           ))
         }
-      </nav>
-    </div>
+      </ul>
+    </nav>
 
-    <div class="buttons absolute right-0 top-1/2 -translate-y-1/2 flex gap-1">
-      <a href="/search" aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out", pathname === "/search" || "/" + subpath?.[0] === "/search" ? "pointer-events-none bg-black dark:bg-white text-white dark:text-black" : "")}>
-        <svg class="size-full">
-          <use href="/ui.svg#search"></use>
-        </svg>
+    <!-- Utilities -->
+    <div class="flex items-center gap-2">
+      <a
+        href="/search"
+        aria-label="Search posts and projects"
+        class="grid size-10 place-items-center rounded-full border border-[--line] text-mist transition-colors duration-300 hover:border-glow/40 hover:text-starlight"
+      >
+        <Icon name="search" />
       </a>
 
-      <a href="/rss.xml" target="_blank" aria-label={`Rss feed for ${SITE.TITLE}`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg class="size-full">
-          <use href="/ui.svg#rss"></use>
-        </svg>
+      <a
+        href={SITE.CV}
+        download
+        class="group hidden items-center gap-2 rounded-full border border-glow/40 bg-glow/10 px-5 py-2.5 text-[0.92rem] text-starlight transition-all duration-500 ease-portal hover:border-glow hover:bg-glow hover:text-void sm:flex"
+      >
+        <Icon name="download" class="size-4 transition-transform duration-500 group-hover:translate-y-0.5" />
+        CV
       </a>
 
-      <button id="header-theme-button" aria-label={`Toggle light and dark theme`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg class="size-full block dark:hidden">
-          <use href="/ui.svg#sun"></use>
-        </svg>
-        <svg class="size-full hidden dark:block">
-          <use href="/ui.svg#moon"></use>
-        </svg>
-      </button>
-
-      <button id="header-drawer-button" aria-label={`Toggle drawer open and closed`} class={cn("flex md:hidden", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg id="drawer-open" class="size-full">
-          <use href="/ui.svg#menu"></use>
-        </svg>
-        <svg id="drawer-close" class="size-full">
-          <use href="/ui.svg#x"></use>
-        </svg>
+      <button
+        id="drawer-button"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="drawer"
+        class="grid size-10 place-items-center rounded-full border border-[--line] text-mist transition-colors duration-300 hover:border-glow/40 hover:text-starlight lg:hidden"
+      >
+        <Icon name="menu" class="icon-menu size-5" />
+        <Icon name="x" class="icon-close size-5" />
       </button>
     </div>
-  </div>
   </Container>
 </header>
 
 <style>
-  #header-drawer-button > #drawer-open {
-    @apply block;
-  }
-
-  #header-drawer-button > #drawer-close {
-    @apply hidden;
-  }
-
-  #header-drawer-button.open > #drawer-open {
-    @apply hidden;
-  }
-
-  #header-drawer-button.open > #drawer-close {
-    @apply block;
+  header.scrolled {
+    @apply border-[--line] bg-void/75 backdrop-blur-xl;
   }
 </style>
-
-<script is:inline>
-  function toggleDrawer() {
-    const drawer = document.getElementById("drawer")
-    const drawerButton = document.getElementById("header-drawer-button")
-    drawer?.classList.toggle("open")
-    drawerButton?.classList.toggle("open")
-  }
-
-  function initializeDrawerButton() {
-    const drawerButton = document.getElementById("header-drawer-button")
-    drawerButton?.addEventListener("click", toggleDrawer)
-  }
-
-  document.addEventListener("astro:after-swap", initializeDrawerButton)
-  initializeDrawerButton()
-</script>

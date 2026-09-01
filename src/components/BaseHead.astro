@@ -1,69 +1,200 @@
 ---
 import { ViewTransitions } from "astro:transitions"
+import { SITE, SOCIALS } from "@consts"
 
-interface Props {
+type Props = {
+  /** Full document title, including the site name */
   title: string
+  /** Page title without the site suffix — used for structured data */
+  rawTitle?: string
   description: string
   image?: string
+  /** Present on blog posts and project case studies */
+  article?: {
+    published: Date
+    modified?: Date
+    section?: string
+    tags?: string[]
+  }
+  /** Trail shown to search engines, e.g. Blog → Post title */
+  breadcrumbs?: { name: string; href: string }[]
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const { title, rawTitle, description, image = "/open-graph.jpg", article, breadcrumbs } = Astro.props
 
-const { title, description, image = "/open-graph.jpg" } = Astro.props
+const headline = rawTitle ?? title
+
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const socialImage = new URL(image, Astro.site)
+const origin = new URL(Astro.site!).origin
+
+/* ── Structured data ──────────────────────────────────────────
+   One @graph so Google can resolve the relationships between the
+   person, the site and the page instead of guessing.            */
+const person = {
+  "@type": "Person",
+  "@id": `${origin}/#person`,
+  name: SITE.NAME,
+  givenName: "Sergiu",
+  familyName: "Mocan",
+  url: origin,
+  image: new URL("/open-graph.jpg", Astro.site).href,
+  jobTitle: "Software Engineer",
+  email: `mailto:${SITE.EMAIL}`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Cluj-Napoca",
+    addressCountry: "RO",
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Babeș-Bolyai University",
+  },
+  knowsAbout: [
+    ".NET",
+    "ASP.NET Core",
+    "C#",
+    "AWS",
+    "AWS CDK",
+    "Cloud migration",
+    "Distributed systems",
+    "TypeScript",
+    "React",
+    "Solidity",
+  ],
+  sameAs: SOCIALS.filter((social) => social.HREF.startsWith("http")).map((social) => social.HREF),
+}
+
+const website = {
+  "@type": "WebSite",
+  "@id": `${origin}/#website`,
+  url: origin,
+  name: SITE.TITLE,
+  description: SITE.DESCRIPTION,
+  inLanguage: "en",
+  publisher: { "@id": `${origin}/#person` },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${origin}/search?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+}
+
+const page = article
+  ? {
+      "@type": "BlogPosting",
+      "@id": `${canonical.href}#article`,
+      headline,
+      description,
+      image: socialImage.href,
+      datePublished: article.published.toISOString(),
+      dateModified: (article.modified ?? article.published).toISOString(),
+      articleSection: article.section,
+      keywords: article.tags?.join(", "),
+      inLanguage: "en",
+      author: { "@id": `${origin}/#person` },
+      publisher: { "@id": `${origin}/#person` },
+      isPartOf: { "@id": `${origin}/#website` },
+      mainEntityOfPage: canonical.href,
+    }
+  : {
+      "@type": "WebPage",
+      "@id": `${canonical.href}#webpage`,
+      url: canonical.href,
+      name: headline,
+      description,
+      inLanguage: "en",
+      isPartOf: { "@id": `${origin}/#website` },
+      about: { "@id": `${origin}/#person` },
+    }
+
+const trail = breadcrumbs?.length
+  ? [
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonical.href}#breadcrumbs`,
+        itemListElement: [{ name: "Home", href: "/" }, ...breadcrumbs].map((crumb, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: crumb.name,
+          item: new URL(crumb.href, Astro.site).href,
+        })),
+      },
+    ]
+  : []
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [person, website, page, ...trail],
+}
 ---
 
-<!-- Global Metadata -->
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
+<meta name="theme-color" content="#08060E" />
 
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin>
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin>
-
-<!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
-
-<!-- Primary Meta Tags -->
 <title>{title}</title>
-<meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="author" content={SITE.AUTHOR} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.TITLE} — Blog`}
+  href={new URL("rss.xml", Astro.site)}
+/>
+
+<!-- Typography: one family, four weights -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+/>
+
+<!-- Open Graph -->
+<meta property="og:type" content={article ? "article" : "website"} />
+<meta property="og:site_name" content={SITE.TITLE} />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:url" content={canonical} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image" content={socialImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${SITE.NAME} — ${SITE.ROLE}`} />
+
+{
+  article && (
+    <>
+      <meta property="article:author" content={SITE.AUTHOR} />
+      <meta property="article:published_time" content={article.published.toISOString()} />
+      {article.modified && (
+        <meta property="article:modified_time" content={article.modified.toISOString()} />
+      )}
+      {article.section && <meta property="article:section" content={article.section} />}
+      {article.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+    </>
+  )
+}
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImage} />
 
-<!-- Sitemap -->
-<link rel="sitemap" href="/sitemap-index.xml" />
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
 
-<!-- RSS Feed -->
-<link rel="alternate" type="application/rss+xml" title={title} href={`${Astro.site}rss.xml`}/>
-
-<!-- Global Scripts -->
-<script is:inline src="/js/theme.js"></script>
-<script is:inline src="/js/scroll.js"></script>
-<script is:inline src="/js/animate.js"></script>
+<script is:inline defer src="/js/atmosphere.js"></script>
 <script defer is:inline src="/js/copy.js"></script>
 
-<!-- <ViewTransitions  /> -->
-
-<script>
-  import type { TransitionBeforeSwapEvent } from "astro:transitions/client"
-  document.addEventListener("astro:before-swap", (e) =>
-    [
-      ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
-        "link[as=\"font\"]"
-      ),
-    ].forEach((link) => link.remove())
-  )
-</script>
+<ViewTransitions />
