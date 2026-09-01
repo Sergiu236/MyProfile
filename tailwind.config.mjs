@@ -4,39 +4,39 @@ export default {
   theme: {
     extend: {
       colors: {
-        /* ── Deep space: near-black, violet-tinted. Never pure #000 —
-              that reads flat and cheap; a tinted near-black reads deep. ── */
+        /* ── Deep space: near-black, neutral grey. Never pure #000 —
+              that reads flat and cheap; a soft charcoal reads deep. ── */
         void: {
-          DEFAULT: "#08060E",
-          soft: "#0C0916",
-          lift: "#100C1B",
+          DEFAULT: "#0A0A0C",
+          soft: "#0D0D10",
+          lift: "#111114",
         },
         surface: {
-          DEFAULT: "#120D1F",
-          hi: "#191227",
-          hover: "#211833",
+          DEFAULT: "#18181B",
+          hi: "#1F1F23",
+          hover: "#27272B",
         },
-        /* Cosmic Amethyst — the structural tone: borders, chips, dividers */
+        /* Structural grey — borders, chips, dividers */
         amethyst: {
-          DEFAULT: "#4C3D52",
-          deep: "#372B3C",
-          lift: "#6B5675",
-          mist: "#9083A0",
+          DEFAULT: "#3F3F46",
+          deep: "#2E2E33",
+          lift: "#59595F",
+          mist: "#8A8A91",
         },
-        /* Neon violet — the only saturated colour on the page.
+        /* Brushed silver — the only "accent" on the page.
            Restraint is what makes it read as expensive. */
         glow: {
-          DEFAULT: "#B14EFF",
-          faint: "#DDB4FF",
-          soft: "#9A3BEA",
-          deep: "#7A2BD4",
+          DEFAULT: "#E4E4E7",
+          faint: "#F4F4F5",
+          soft: "#A1A1AA",
+          deep: "#71717A",
         },
-        /* Rare cyan spark, for live/status signals only */
-        nebula: "#6BE9FF",
+        /* Pale spark, for live/status signals only */
+        nebula: "#C4C4CC",
         /* Text ramp */
-        starlight: "#F4F0FA",
-        mist: "#A99DBE",
-        dim: "#766B8A",
+        starlight: "#F7F7F8",
+        mist: "#A1A1AA",
+        dim: "#71717A",
       },
       fontFamily: {
         /* One family, used everywhere — clarity over variety */
@@ -62,14 +62,14 @@ export default {
         shell: "78rem",
       },
       backgroundImage: {
-        hairline: "linear-gradient(90deg, transparent, rgba(177,78,255,.4), transparent)",
+        hairline: "linear-gradient(90deg, transparent, rgba(228,228,231,.4), transparent)",
       },
       boxShadow: {
-        /* Glow via box-shadow, never filter: blur() — orders of magnitude
-           cheaper in GPU memory on large elements. */
-        neon: "0 0 0 1px rgba(177,78,255,.22), 0 12px 40px -12px rgba(177,78,255,.55)",
-        "neon-lg": "0 0 0 1px rgba(177,78,255,.3), 0 24px 70px -18px rgba(177,78,255,.7)",
-        halo: "0 0 60px -10px rgba(177,78,255,.45)",
+        /* Flat elevation, never a coloured halo — grey shadows read as
+           depth, not as a glow. */
+        neon: "0 0 0 1px rgba(228,228,231,.16), 0 12px 40px -12px rgba(0,0,0,.6)",
+        "neon-lg": "0 0 0 1px rgba(228,228,231,.22), 0 24px 70px -18px rgba(0,0,0,.7)",
+        halo: "0 0 60px -10px rgba(0,0,0,.55)",
       },
       transitionTimingFunction: {
         portal: "cubic-bezier(.22,1,.36,1)",

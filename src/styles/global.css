@@ -3,26 +3,26 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════════════════════
-   NEON VIOLET ON DEEP SPACE
+   PREMIUM DARK GREY
 
-   Two rules keep this feeling expensive rather than loud:
-   1. The ground is a violet-tinted near-black — never pure #000 and
+   Two rules keep this feeling expensive rather than flat:
+   1. The ground is a soft charcoal near-black — never pure #000 and
       never a muddy grey. Depth comes from tint, not from lightness.
-   2. Saturated violet is reserved for meaning: actions, live state,
+   2. Bright silver is reserved for meaning: actions, live state,
       key numbers, hover. Everything else stays in the neutral ramp.
    ══════════════════════════════════════════════════════════════ */
 :root {
-  --void: #08060e;
-  --surface: #120d1f;
-  --amethyst: #4c3d52;
-  --neon: #b14eff;
-  --neon-deep: #7a2bd4;
-  --ice: #6be9ff;
-  --starlight: #f4f0fa;
-  --mist: #a99dbe;
+  --void: #0a0a0c;
+  --surface: #18181b;
+  --amethyst: #3f3f46;
+  --neon: #e4e4e7;
+  --neon-deep: #71717a;
+  --ice: #c4c4cc;
+  --starlight: #f7f7f8;
+  --mist: #a1a1aa;
 
-  --line: rgba(177, 78, 255, 0.12);
-  --line-strong: rgba(177, 78, 255, 0.3);
+  --line: rgba(228, 228, 231, 0.12);
+  --line-strong: rgba(228, 228, 231, 0.24);
 
   --copy-btn-margin: 12px;
 
@@ -66,7 +66,7 @@
   }
 
   ::selection {
-    background: rgba(177, 78, 255, 0.32);
+    background: rgba(161, 161, 170, 0.35);
     color: var(--starlight);
   }
 
@@ -89,7 +89,7 @@
     border: 3px solid var(--void);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #6b5675;
+    background: #59595f;
   }
 }
 
@@ -129,15 +129,15 @@
   .btn-primary {
     @apply bg-glow text-void;
     box-shadow:
-      0 0 0 1px rgba(177, 78, 255, 0.3),
-      0 14px 44px -14px rgba(177, 78, 255, 0.75);
+      0 0 0 1px rgba(228, 228, 231, 0.18),
+      0 14px 34px -14px rgba(0, 0, 0, 0.65);
   }
   .btn-primary:hover {
     @apply bg-glow-faint;
     transform: translateY(-2px);
     box-shadow:
-      0 0 0 1px rgba(177, 78, 255, 0.5),
-      0 22px 60px -14px rgba(177, 78, 255, 0.95);
+      0 0 0 1px rgba(228, 228, 231, 0.28),
+      0 20px 44px -14px rgba(0, 0, 0, 0.75);
   }
   .btn-ghost {
     @apply border border-[--line-strong] text-starlight hover:border-glow/70 hover:bg-glow/10;
@@ -158,10 +158,9 @@
     @apply origin-left scale-x-100;
   }
 
-  /* Neon text: a tight halo, used on at most one phrase per screen */
+  /* Emphasis text: bright against the grey ramp, no halo */
   .neon {
     color: var(--neon);
-    text-shadow: 0 0 30px rgba(177, 78, 255, 0.55);
   }
 }
 
@@ -171,11 +170,11 @@
    filter: blur() — which is what was costing the GPU ~100 MB.
    ══════════════════════════════════════════════════════════════ */
 
-/* The cursor carries a small pool of violet light */
+/* The cursor carries a small pool of soft light */
 .spotlight {
   background: radial-gradient(
     32rem 32rem at var(--mx) var(--my),
-    rgba(177, 78, 255, 0.09),
+    rgba(255, 255, 255, 0.06),
     transparent 70%
   );
 }
@@ -233,22 +232,22 @@
    ══════════════════════════════════════════════════════════════ */
 .article {
   @apply prose prose-invert max-w-prose;
-  --tw-prose-body: #a99dbe;
-  --tw-prose-headings: #f4f0fa;
-  --tw-prose-lead: #c4b9d6;
-  --tw-prose-links: #b14eff;
-  --tw-prose-bold: #f4f0fa;
-  --tw-prose-counters: #766b8a;
-  --tw-prose-bullets: #4c3d52;
-  --tw-prose-hr: rgba(177, 78, 255, 0.16);
-  --tw-prose-quotes: #f4f0fa;
-  --tw-prose-quote-borders: #b14eff;
-  --tw-prose-captions: #766b8a;
-  --tw-prose-code: #ddb4ff;
-  --tw-prose-pre-code: #ddd4ec;
-  --tw-prose-pre-bg: #0c0916;
-  --tw-prose-th-borders: #4c3d52;
-  --tw-prose-td-borders: rgba(177, 78, 255, 0.14);
+  --tw-prose-body: #a1a1aa;
+  --tw-prose-headings: #f7f7f8;
+  --tw-prose-lead: #b8b8bf;
+  --tw-prose-links: #e4e4e7;
+  --tw-prose-bold: #f7f7f8;
+  --tw-prose-counters: #71717a;
+  --tw-prose-bullets: #3f3f46;
+  --tw-prose-hr: rgba(228, 228, 231, 0.16);
+  --tw-prose-quotes: #f7f7f8;
+  --tw-prose-quote-borders: #e4e4e7;
+  --tw-prose-captions: #71717a;
+  --tw-prose-code: #d4d4d8;
+  --tw-prose-pre-code: #e4e4e7;
+  --tw-prose-pre-bg: #0d0d10;
+  --tw-prose-th-borders: #3f3f46;
+  --tw-prose-td-borders: rgba(228, 228, 231, 0.14);
   font-size: 1.0625rem;
   line-height: 1.8;
 }

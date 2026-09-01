@@ -51,8 +51,8 @@
         // Twinkle phase and speed, so no two stars pulse together
         phase: Math.random() * Math.PI * 2,
         speed: 0.4 + Math.random() * 1.1,
-        // A rare few stars are amethyst or nebula-cyan rather than white
-        hue: Math.random() < 0.16 ? "177,78,255" : Math.random() < 0.05 ? "107,233,255" : "244,240,250",
+        // A rare few stars burn a touch brighter or dimmer than the rest
+        hue: Math.random() < 0.16 ? "255,255,255" : Math.random() < 0.05 ? "196,196,204" : "244,244,245",
       })),
     )
   }
