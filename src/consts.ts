@@ -1,22 +1,69 @@
-import type { Link, Page, Section, Site, Social, StackGroup } from "@types"
+import type { Link, Page, Section, Service, Site, Social, StackGroup } from "@types"
 
 /* ─────────────────────────────────────────────────────────────
    IDENTITY
    ───────────────────────────────────────────────────────────── */
+/*
+   Everything named DESCRIPTION or ROLE below is rendered on the page.
+   The SEO_* and META_* fields are never shown to a visitor — they exist
+   only for <title>, <meta> and structured data. Keep it that way: on-page
+   copy is Sergiu's voice, metadata is for crawlers.
+*/
 export const SITE: Site = {
   TITLE: "Sergiu Mocan",
   NAME: "Sergiu Ioan Mocan",
   ROLE: "Software Engineer · Cloud & DevOps",
   DESCRIPTION:
     "Software engineer building cloud-native .NET platforms on AWS. I take systems that were never meant to scale and rebuild them so they can.",
+  SEO_TITLE: "Sergiu Mocan — .NET & AWS Software Engineer",
+  META_DESCRIPTION:
+    "Sergiu Mocan — software engineer building cloud-native .NET and AWS systems. Available for freelance software projects and open to engineering roles.",
+  /** Job title for structured data only — never rendered */
+  JOB_TITLE: ".NET & AWS Software Engineer",
   AUTHOR: "Sergiu Ioan Mocan",
   LOCATION: "Cluj-Napoca, Romania",
+  CITY: "Cluj-Napoca",
+  REGION: "Cluj",
+  COUNTRY: "RO",
   EMAIL: "sergiumocan74@gmail.com",
   PHONE: "+40 741 270 890",
   CV: "/Sergiu-Mocan-CV.pdf",
   AVAILABLE: true,
   AVAILABILITY: "Open to senior engineering roles",
 }
+
+/* ─────────────────────────────────────────────────────────────
+   SERVICES
+   These are what a client actually types into a search box, so they
+   drive the schema.org offer catalogue as well as the page copy.
+   ───────────────────────────────────────────────────────────── */
+export const SERVICES: Service[] = [
+  {
+    NAME: ".NET backend development",
+    DESCRIPTION:
+      "ASP.NET Core APIs, Entity Framework Core data layers and background services, built to Clean Architecture boundaries and covered by tests.",
+  },
+  {
+    NAME: "AWS cloud architecture & migration",
+    DESCRIPTION:
+      "Event-driven systems on ECS/Fargate, SQS and EventBridge, provisioned as code with AWS CDK — including moving existing workloads to them without downtime.",
+  },
+  {
+    NAME: "Full-stack web application development",
+    DESCRIPTION:
+      "React and TypeScript front ends on .NET back ends, from data model through to deployment pipeline.",
+  },
+  {
+    NAME: "Blockchain & smart contract development",
+    DESCRIPTION:
+      "Solidity contracts, upgradeable proxies and Merkle-proof verification on Ethereum, written so that invalid states are impossible rather than merely unlikely.",
+  },
+  {
+    NAME: "Machine learning & computer vision",
+    DESCRIPTION:
+      "Physics-informed neural networks and real-time computer-vision pipelines, where the constraints of the domain are built into the model itself.",
+  },
+]
 
 /* ─────────────────────────────────────────────────────────────
    PAGES
@@ -26,6 +73,9 @@ export const WORK: Page = {
   KICKER: "The trajectory",
   DESCRIPTION:
     "Four years of shipping production systems — what I was hired to solve, and what actually changed because of it.",
+  SEO_TITLE: "Experience — Sergiu Mocan, .NET & AWS Engineer",
+  META_DESCRIPTION:
+    "Four years shipping production .NET and AWS systems: what I was hired to fix, and what measurably changed. Experience, education and certifications.",
 }
 
 export const PROJECTS: Page = {
@@ -33,6 +83,9 @@ export const PROJECTS: Page = {
   KICKER: "Built out of curiosity",
   DESCRIPTION:
     "Systems I designed end to end.",
+  SEO_TITLE: "Projects — Sergiu Mocan | .NET, AWS, Blockchain, ML",
+  META_DESCRIPTION:
+    "Software engineering projects built end to end: an Ethereum voting system, a physics-informed neural network and a real-time computer-vision cursor.",
 }
 
 export const BLOG: Page = {
@@ -40,18 +93,27 @@ export const BLOG: Page = {
   KICKER: "Transmissions",
   DESCRIPTION:
     "The software development lifecycle: planning, system architecture, and agile delivery from start to deployment.",
+  SEO_TITLE: "Blog — .NET, AWS & Architecture | Sergiu Mocan",
+  META_DESCRIPTION:
+    "Practical notes on .NET, AWS and system architecture — async internals, resilience patterns and event-driven design, written from production experience.",
 }
 
 export const ABOUT: Page = {
   TITLE: "About",
   KICKER: "Who is behind the console",
   DESCRIPTION: "The longer version: how I work, what I have studied, and what I am chasing next.",
+  SEO_TITLE: "About Sergiu Mocan — Software Engineer, Cluj-Napoca",
+  META_DESCRIPTION:
+    "How I work, what I have built and the tools I use. Software engineer specialising in .NET, AWS and distributed systems, based in Cluj-Napoca, Romania.",
 }
 
 export const CONTACT: Page = {
   TITLE: "Contact",
   KICKER: "Open a channel",
   DESCRIPTION: "The fastest ways to reach me.",
+  SEO_TITLE: "Contact — Hire Sergiu Mocan, .NET & AWS Engineer",
+  META_DESCRIPTION:
+    "Hire Sergiu Mocan for .NET, AWS or full-stack development, or get in touch about an engineering role. Email, LinkedIn, GitHub and phone.",
 }
 
 /* ─────────────────────────────────────────────────────────────

@@ -1,12 +1,14 @@
 ---
 import { ViewTransitions } from "astro:transitions"
-import { SITE, SOCIALS } from "@consts"
+import { SERVICES, SITE, SOCIALS } from "@consts"
 
 type Props = {
-  /** Full document title, including the site name */
+  /** The browser tab and <title> — just the site name, by design */
   title: string
   /** Page title without the site suffix — used for structured data */
   rawTitle?: string
+  /** Descriptive title used only on Open Graph and Twitter cards */
+  socialTitle?: string
   description: string
   image?: string
   /** Present on blog posts and project case studies */
@@ -20,9 +22,20 @@ type Props = {
   breadcrumbs?: { name: string; href: string }[]
 }
 
-const { title, rawTitle, description, image = "/open-graph.jpg", article, breadcrumbs } = Astro.props
+const {
+  title,
+  rawTitle,
+  socialTitle,
+  description,
+  image = "/open-graph.jpg",
+  article,
+  breadcrumbs,
+} = Astro.props
 
+/* Structured data wants the clean page or article title; a shared link
+   wants the descriptive one. They are not the same string. */
 const headline = rawTitle ?? title
+const shareTitle = socialTitle ?? headline
 
 const canonical = new URL(Astro.url.pathname, Astro.site)
 const socialImage = new URL(image, Astro.site)
@@ -35,34 +48,115 @@ const person = {
   "@type": "Person",
   "@id": `${origin}/#person`,
   name: SITE.NAME,
+  alternateName: SITE.TITLE,
   givenName: "Sergiu",
   familyName: "Mocan",
   url: origin,
   image: new URL("/open-graph.jpg", Astro.site).href,
-  jobTitle: "Software Engineer",
+  jobTitle: SITE.JOB_TITLE,
+  description: SITE.META_DESCRIPTION,
   email: `mailto:${SITE.EMAIL}`,
+  telephone: SITE.PHONE,
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Cluj-Napoca",
-    addressCountry: "RO",
+    addressLocality: SITE.CITY,
+    addressRegion: SITE.REGION,
+    addressCountry: SITE.COUNTRY,
   },
+  workLocation: { "@type": "Place", name: SITE.LOCATION },
+  ...(SITE.AVAILABLE ? { seeks: { "@type": "Demand", name: SITE.AVAILABILITY } } : {}),
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "Babeș-Bolyai University",
   },
+  knowsLanguage: ["en", "ro"],
   knowsAbout: [
     ".NET",
+    ".NET Core",
     "ASP.NET Core",
     "C#",
+    "Entity Framework Core",
     "AWS",
     "AWS CDK",
+    "Amazon ECS",
+    "AWS Fargate",
+    "Amazon SQS",
     "Cloud migration",
+    "Microservices",
     "Distributed systems",
+    "Event-driven architecture",
+    "Clean Architecture",
+    "Domain-driven design",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
     "TypeScript",
     "React",
+    "Node.js",
+    "SQL Server",
+    "PostgreSQL",
+    "Redis",
     "Solidity",
+    "Ethereum",
+    "Smart contracts",
+    "Machine learning",
+    "Computer vision",
   ],
+  /* What a client can buy. This is the part that answers commercial
+     searches like "hire .NET developer" rather than just the name. */
+  makesOffer: SERVICES.map((service) => ({
+    "@type": "Offer",
+    itemOffered: {
+      "@type": "Service",
+      name: service.NAME,
+      description: service.DESCRIPTION,
+      provider: { "@id": `${origin}/#person` },
+      areaServed: [
+        { "@type": "Country", name: "Romania" },
+        { "@type": "Place", name: "Remote / Worldwide" },
+      ],
+    },
+  })),
   sameAs: SOCIALS.filter((social) => social.HREF.startsWith("http")).map((social) => social.HREF),
+}
+
+/* A distinct commercial entity, so the freelance side of the site is
+   legible to search engines as a service business, not only a CV. */
+const practice = {
+  "@type": "ProfessionalService",
+  "@id": `${origin}/#practice`,
+  name: `${SITE.TITLE} — Software Engineering`,
+  description:
+    "Freelance software engineering: .NET and AWS back ends, full-stack web applications, smart contracts and machine-learning systems.",
+  url: origin,
+  image: new URL("/open-graph.jpg", Astro.site).href,
+  founder: { "@id": `${origin}/#person` },
+  email: `mailto:${SITE.EMAIL}`,
+  telephone: SITE.PHONE,
+  priceRange: "$$",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: SITE.CITY,
+    addressRegion: SITE.REGION,
+    addressCountry: SITE.COUNTRY,
+  },
+  areaServed: [
+    { "@type": "Country", name: "Romania" },
+    { "@type": "Place", name: "Remote / Worldwide" },
+  ],
+  knowsAbout: SERVICES.map((service) => service.NAME),
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Software engineering services",
+    itemListElement: SERVICES.map((service) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: service.NAME,
+        description: service.DESCRIPTION,
+      },
+    })),
+  },
 }
 
 const website = {
@@ -120,7 +214,7 @@ const trail = breadcrumbs?.length
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@graph": [person, website, page, ...trail],
+  "@graph": [person, practice, website, page, ...trail],
 }
 ---
 
@@ -157,12 +251,21 @@ const jsonLd = {
 <meta property="og:site_name" content={SITE.TITLE} />
 <meta property="og:locale" content="en_GB" />
 <meta property="og:url" content={canonical} />
-<meta property="og:title" content={headline} />
+<meta property="og:title" content={shareTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={socialImage} />
+<meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={`${SITE.NAME} — ${SITE.ROLE}`} />
+
+<!-- Identity links: these tie the profiles together for search engines,
+     which is most of what makes a name query resolve to the right person. -->
+{
+  SOCIALS.filter((social) => social.HREF.startsWith("http")).map((social) => (
+    <link rel="me" href={social.HREF} />
+  ))
+}
 
 {
   article && (
@@ -180,9 +283,10 @@ const jsonLd = {
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={headline} />
+<meta name="twitter:title" content={shareTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={socialImage} />
+<meta name="twitter:image:alt" content={`${SITE.NAME} — ${SITE.ROLE}`} />
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
 

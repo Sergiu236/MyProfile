@@ -1,6 +1,6 @@
 # Sergiu Mocan — Portfolio
 
-Neon violet on deep space. A CV timeline, project case studies and a scalable blog,
+Brushed silver on charcoal. A CV timeline, project case studies and a blog,
 built with Astro and no UI framework.
 
 ```bash
@@ -10,12 +10,20 @@ npm run build    # type-check + static build into dist/
 npm run preview  # serve the built site — always measure performance here, not in dev
 ```
 
-## Before you deploy
+## Deploying
 
-**Set your domain** in [astro.config.mjs](astro.config.mjs) (currently `sergiumocan.dev`).
-It drives canonical URLs, the sitemap, RSS, Open Graph URLs and every structured-data id.
+The site is a static build uploaded to S3 behind Cloudflare. `npm run build`, then upload
+the contents of `dist/`. Two things that have bitten before:
 
-Everything else is already wired: the CV lives at `public/Sergiu-Mocan-CV.pdf`.
+- **Purge the Cloudflare cache afterwards.** Files in `public/` keep stable names and are
+  edge-cached for hours (`/js/atmosphere.js`, `/open-graph.jpg`), so an upload can look
+  like it did nothing. Hashed `/_astro/*` assets and HTML are unaffected.
+- **Internal links that carry a `#fragment` need a trailing slash.** The host 302s
+  `/about` → `/about/`, and Astro's client router adopts the redirect URL — which drops the
+  fragment, because `fetch` responses never carry one. Write `/about/#instruments`.
+
+`site` in [astro.config.mjs](astro.config.mjs) drives canonical URLs, the sitemap, RSS,
+Open Graph URLs and every structured-data id, so it must match the live domain.
 
 ## Where things live
 
@@ -53,7 +61,7 @@ Create `src/content/blog/my-post.md`:
 title: "The title"
 summary: "One or two sentences — shown in listings and as the meta description."
 date: "2026-09-02"
-section: "engineering"   # must exist in SECTIONS in src/consts.ts
+section: "backend-engineering"   # must exist in SECTIONS in src/consts.ts
 tags: ["Architecture", ".NET"]
 featured: false          # true pins it as the lead story on /blog
 draft: false             # true keeps it out of the build entirely
@@ -78,10 +86,10 @@ the opening clause.
 
 - **Typeface:** Poppins throughout, four weights. Code blocks use the system mono stack,
   so there is no second webfont to download.
-- **Colour:** a violet-tinted near-black ground (`#08060E`) — never pure black, which
-  reads flat. Neon violet (`#B14EFF`) is reserved for actions, live state, key numbers and
-  hover; the amethyst `#4C3D52` carries borders, chips and dividers. Restraint is what
-  makes the neon read as expensive rather than loud.
+- **Colour:** a soft charcoal ground (`#0A0A0C`) — never pure black, which reads flat.
+  Depth comes from tint, not lightness. Brushed silver (`#E4E4E7`) is reserved for
+  actions, live state, key numbers and hover; the structural grey `#3F3F46` carries
+  borders, chips and dividers. Restraint is what makes the silver read as expensive.
 - **Dark only.** There is no theme toggle by design.
 
 ## Performance
@@ -117,9 +125,14 @@ manager (Shift+Esc).
 
 ## SEO
 
-- Unique `<title>` and description per page; one `<h1>` per page.
-- `Person` + `WebSite` + per-page `WebPage`/`BlogPosting` + `BreadcrumbList` JSON-LD,
-  linked by `@id` so search engines resolve the relationships instead of guessing.
+- Unique `<title>` and description per page; one `<h1>` per page. Page titles come from
+  `SEO_TITLE` in `src/consts.ts`; dynamic pages fall back to `"<title> — Sergiu Mocan"`.
+- `Person` + `ProfessionalService` + `WebSite` + per-page `WebPage`/`BlogPosting` +
+  `BreadcrumbList` JSON-LD, linked by `@id` so search engines resolve the relationships
+  instead of guessing. The service offers in `SERVICES` are what answer commercial
+  searches ("hire .NET developer") rather than name searches.
+- `rel="me"` links to each profile, which is most of what ties a name query to the
+  right person.
 - Canonical URLs, Open Graph and Twitter cards, `article:published_time`, RSS, sitemap and
   a generated `robots.txt`.
 - Every post is server-rendered into the HTML — the archive filters existing DOM rather

@@ -14,7 +14,7 @@ const posts = (await getPosts()).slice(0, 3)
 const projects = (await getProjects()).slice(0, 1)
 ---
 
-<PageLayout title={SITE.TITLE} description={SITE.DESCRIPTION}>
+<PageLayout title={SITE.TITLE} description={SITE.META_DESCRIPTION} seoTitle={SITE.SEO_TITLE}>
   <!-- ══════════════════════════════════════════════════════════
        HERO — the threshold
        ══════════════════════════════════════════════════════════ -->

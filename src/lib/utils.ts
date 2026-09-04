@@ -30,10 +30,18 @@ export function readingTime(body: string) {
   return `${Math.max(1, Math.round(words / 200))} min read`
 }
 
-/** Turns "Clean Architecture" into "clean-architecture" for tag URLs */
+/**
+ * Turns "Clean Architecture" into "clean-architecture" for tag URLs.
+ *
+ * Language names are spelled out before the strip, because dropping the
+ * symbols silently collapses "C#" and "C++" both to "c" — an unreadable
+ * URL, and a slug collision waiting to happen.
+ */
 export function slugify(value: string) {
   return value
     .toLowerCase()
+    .replace(/\+\+/g, "plusplus")
+    .replace(/#/g, "sharp")
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "") // strip diacritics: "Babeș" → "babes"
     .replace(/[^a-z0-9]+/g, "-")

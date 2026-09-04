@@ -11,7 +11,8 @@ const projects = await getProjects()
 
 <PageLayout
   title={PROJECTS.TITLE}
-  description={PROJECTS.DESCRIPTION}
+  description={PROJECTS.META_DESCRIPTION}
+  seoTitle={PROJECTS.SEO_TITLE}
   breadcrumbs={[{ name: PROJECTS.TITLE, href: "/projects" }]}
 >
   <PageHeader
