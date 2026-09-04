@@ -290,6 +290,20 @@
     })
   }
 
+  /* ─── View transition scroll fix ─────────────────────────── *
+     Astro's router jumps to a target hash by reassigning location.href
+     during the DOM swap, which respects `scroll-behavior: smooth` on
+     :root. That smooth scroll races the view transition's own animation
+     and usually loses, leaving the page at the top. Force instant
+     scrolling for the moment the router does its own scrolling, then
+     hand smooth scrolling back for normal in-page browsing. */
+  document.addEventListener("astro:before-swap", () => {
+    document.documentElement.classList.add("is-transitioning")
+  })
+  document.addEventListener("astro:page-load", () => {
+    document.documentElement.classList.remove("is-transitioning")
+  })
+
   /* Pointer tracking is global and only needs binding once. */
   const boot = () => {
     initPointer()

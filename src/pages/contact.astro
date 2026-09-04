@@ -66,38 +66,40 @@ const channels = [
                 aria-hidden="true"
               />
 
-              <div class="relative flex flex-wrap items-center gap-6 py-8 pl-6">
+              <div class="relative flex items-start gap-4 py-7 pl-4 pr-4 sm:items-center sm:gap-6 sm:py-8 sm:pl-6 sm:pr-6">
                 <Icon
                   name={channel.icon}
                   sprite={channel.icon === "linkedin" || channel.icon === "github" || channel.icon === "mail" ? "social" : "ui"}
-                  class="size-6 text-glow/60 transition-colors duration-500 group-hover:text-glow"
+                  class="mt-1 size-5 shrink-0 text-glow/60 transition-colors duration-500 group-hover:text-glow sm:mt-0 sm:size-6"
                 />
 
-                <div class="min-w-0 flex-1">
-                  <p class="font-sans text-[0.7rem] uppercase tracking-[0.2em] text-dim">
-                    {channel.label}
-                  </p>
-                  <a
-                    href={channel.href}
-                    target={channel.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    class="mt-2 block break-all font-display text-[clamp(1.2rem,1rem+0.9vw,1.7rem)] font-medium tracking-[-0.02em] text-starlight transition-colors duration-300 group-hover:text-glow"
-                  >
-                    {channel.value}
-                  </a>
-                  <p class="mt-2 text-[0.92rem] text-dim">{channel.note}</p>
-                </div>
+                <div class="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div class="min-w-0">
+                    <p class="font-sans text-[0.7rem] uppercase tracking-[0.2em] text-dim">
+                      {channel.label}
+                    </p>
+                    <a
+                      href={channel.href}
+                      target={channel.href.startsWith("http") ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      class="mt-2 block break-all font-display text-[clamp(1.05rem,0.85rem+1vw,1.7rem)] font-medium tracking-[-0.02em] text-starlight transition-colors duration-300 group-hover:text-glow"
+                    >
+                      {channel.value}
+                    </a>
+                    <p class="mt-2 text-[0.88rem] text-dim sm:text-[0.92rem]">{channel.note}</p>
+                  </div>
 
-                {channel.copy && (
-                  <button
-                    type="button"
-                    class="copy-value inline-flex shrink-0 items-center gap-2 rounded-full border border-[--line] px-4 py-2 font-sans text-[0.68rem] uppercase tracking-[0.14em] text-mist transition-colors duration-300 hover:border-glow/50 hover:text-glow"
-                    data-value={channel.value}
-                  >
-                    <Icon name="copy" class="size-3.5" />
-                    <span class="copy-label">Copy</span>
-                  </button>
-                )}
+                  {channel.copy && (
+                    <button
+                      type="button"
+                      class="copy-value inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-[--line] px-4 py-2 font-sans text-[0.68rem] uppercase tracking-[0.14em] text-mist transition-colors duration-300 hover:border-glow/50 hover:text-glow"
+                      data-value={channel.value}
+                    >
+                      <Icon name="copy" class="size-3.5" />
+                      <span class="copy-label">Copy</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </li>
           ))
