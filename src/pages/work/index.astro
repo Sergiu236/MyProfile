@@ -110,7 +110,9 @@ const answers = [
       </div>
 
       <div class="mt-16 flex justify-center">
-        <a href="/about#instruments" class="btn btn-ghost" data-magnetic="0.16">
+        <!-- Trailing slash matters: without it the host 302s /about → /about/, and
+             Astro's router adopts the redirect URL, which drops the #fragment. -->
+        <a href="/about/#instruments" class="btn btn-ghost" data-magnetic="0.16">
           <Icon name="layers" class="size-4" />
           See all skills
         </a>

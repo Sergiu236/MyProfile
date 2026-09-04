@@ -4,9 +4,8 @@ import tailwind from "@astrojs/tailwind"
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: point this at your real domain before deploying — it drives
-  // canonical URLs, the sitemap, RSS and Open Graph image URLs.
-  site: "https://sergiumocan.dev",
+  // Drives canonical URLs, the sitemap, RSS and Open Graph image URLs.
+  site: "https://sergiumocan.com",
   integrations: [sitemap(), tailwind({ applyBaseStyles: false })],
   markdown: {
     shikiConfig: {

@@ -36,13 +36,6 @@
   font-size: clamp(13.2px, 9.6px + 0.44vw, 15.2px);
 }
 
-/* View transitions jump straight to a target hash (see atmosphere.js) —
-   smooth scrolling here would race the transition's own DOM swap and
-   land back at the top of the page. */
-html.is-transitioning {
-  scroll-behavior: auto;
-}
-
 @layer base {
   html {
     @apply bg-void text-mist;
