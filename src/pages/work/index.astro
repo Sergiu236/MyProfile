@@ -4,9 +4,8 @@ import PageHeader from "@components/PageHeader.astro"
 import Container from "@components/Container.astro"
 import Timeline from "@components/Timeline.astro"
 import Icon from "@components/Icon.astro"
-import { CERTIFICATIONS, EDUCATION, SITE, WORK } from "@consts"
+import { CERTIFICATIONS, EDUCATION, WORK } from "@consts"
 import { getRoles } from "@lib/content"
-import { formatDuration } from "@lib/utils"
 
 const collection = await getRoles()
 
@@ -19,18 +18,11 @@ const roles = await Promise.all(
 
 const current = collection.find((role) => typeof role.data.dateEnd === "string")
 
-// Total professional span, from the earliest role to today
-const earliest = collection.reduce(
-  (min, role) => (role.data.dateStart < min ? role.data.dateStart : min),
-  collection[0]!.data.dateStart,
-)
-
-// The four questions a recruiter answers before reading anything else
+// The three questions a recruiter answers before reading anything else
 const answers = [
   { label: "Currently", value: current ? current.data.company : "Available", icon: "zap" },
   { label: "Focus", value: ".NET · AWS · Distributed systems", icon: "layers" },
-  { label: "Based in", value: SITE.LOCATION, icon: "map-pin" },
-  { label: "Experience", value: formatDuration(earliest, "Present"), icon: "clock" },
+  { label: "Based in", value: "Romania", icon: "map-pin" },
 ]
 ---
 
@@ -39,12 +31,12 @@ const answers = [
   description={WORK.DESCRIPTION}
   breadcrumbs={[{ name: WORK.TITLE, href: "/work" }]}
 >
-  <PageHeader kicker={WORK.KICKER} title="Four years of making systems survive contact with reality." description={WORK.DESCRIPTION} />
+  <PageHeader kicker={WORK.KICKER} title="What I was hired to fix, and what actually changed because of it." />
 
   <!-- ── Fast answers ───────────────────────────────────────── -->
   <section class="pb-16">
     <Container size="wide">
-      <ul class="grid gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="90">
+      <ul class="grid gap-px overflow-hidden rounded-2xl border border-[--line] bg-[--line] sm:grid-cols-3" data-reveal-stagger="90">
         {
           answers.map((answer) => (
             <li class="bg-void/85 p-7" data-reveal>
@@ -86,9 +78,6 @@ const answers = [
                 <li class="border-l border-[--line] pl-6">
                   <p class="text-[1.15rem] text-starlight">{entry.DEGREE}</p>
                   <p class="mt-1.5 text-mist">{entry.SCHOOL}</p>
-                  <p class="mt-2 font-sans text-[0.72rem] uppercase tracking-[0.14em] text-dim">
-                    {entry.PERIOD}
-                  </p>
                 </li>
               ))
             }
@@ -118,6 +107,13 @@ const answers = [
             }
           </ul>
         </div>
+      </div>
+
+      <div class="mt-16 flex justify-center">
+        <a href="/about#instruments" class="btn btn-ghost" data-magnetic="0.16">
+          <Icon name="layers" class="size-4" />
+          See all skills
+        </a>
       </div>
     </Container>
   </section>

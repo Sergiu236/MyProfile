@@ -33,7 +33,7 @@
   color-scheme: dark;
   scroll-behavior: smooth;
   /* Everything reads one comfortable size larger than a default site */
-  font-size: clamp(16.5px, 12px + 0.55vw, 19px);
+  font-size: clamp(13.2px, 9.6px + 0.44vw, 15.2px);
 }
 
 @layer base {

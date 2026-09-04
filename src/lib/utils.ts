@@ -14,34 +14,15 @@ export function formatDate(date: Date) {
   }).format(date)
 }
 
-/** "Mar 2025", or the string itself when a role is still open ("Present") */
-export function formatMonthYear(input: Date | string) {
+/** "2025", or the string itself when a role is still open ("Present") */
+export function formatYear(input: Date | string) {
   if (typeof input === "string") return input
-  return new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric" }).format(input)
+  return new Intl.DateTimeFormat("en-GB", { year: "numeric" }).format(input)
 }
 
 /** ISO date attribute for <time> elements */
 export function isoDate(input: Date | string) {
   return typeof input === "string" ? undefined : input.toISOString()
-}
-
-/**
- * "2 yrs 4 mos" — the span a recruiter would otherwise have to compute
- * in their head while scanning the timeline.
- */
-export function formatDuration(start: Date, end: Date | string) {
-  const to = typeof end === "string" ? new Date() : end
-  const months = Math.max(
-    1,
-    (to.getFullYear() - start.getFullYear()) * 12 + (to.getMonth() - start.getMonth()) + 1,
-  )
-  const years = Math.floor(months / 12)
-  const rest = months % 12
-
-  const parts: string[] = []
-  if (years) parts.push(`${years} yr${years > 1 ? "s" : ""}`)
-  if (rest) parts.push(`${rest} mo${rest > 1 ? "s" : ""}`)
-  return parts.join(" ")
 }
 
 export function readingTime(body: string) {

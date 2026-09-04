@@ -22,8 +22,8 @@ type Props = {
 
 const { title, description, image, article, breadcrumbs } = Astro.props
 
-// The home page owns the whole title; every other page is namespaced.
-const pageTitle = title === SITE.TITLE ? title : `${title} — ${SITE.TITLE}`
+// The tab always shows just the name; per-page titles still drive SEO/structured data via rawTitle.
+const pageTitle = SITE.TITLE
 ---
 
 <!doctype html>

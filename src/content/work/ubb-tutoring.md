@@ -2,9 +2,9 @@
 company: "Babeș-Bolyai University — Independent"
 role: "Private Tutor, Computer Science Admission"
 context: "Preparing candidates for the Babeș-Bolyai Computer Science admission exam — algorithms, data structures and mathematical logic."
-dateStart: "2023-02-01"
+dateStart: "2023-01-01"
 dateEnd: "Present"
-location: "Cluj-Napoca, Romania"
+location: "Romania"
 type: "Part-time"
 stack:
   - "Algorithms"

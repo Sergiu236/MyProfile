@@ -53,6 +53,8 @@ const projects = defineCollection({
     draft: z.boolean().default(false),
     demoUrl: z.string().url().optional(),
     repoUrl: z.string().url().optional(),
+    /** Hero image shown on the case study page, relative to /public */
+    image: z.string().optional(),
   }),
 })
 

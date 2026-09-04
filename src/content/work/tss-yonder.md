@@ -1,21 +1,21 @@
 ---
 company: "TSS Yonder"
-role: "Software Engineer — .NET & AWS"
-context: "A Dealer Management System relied on by 750+ automotive businesses across Western Europe, being moved off a legacy VB6 desktop application onto a cloud-native .NET platform on AWS."
+role: "Software Engineer, .NET & AWS"
+context: "Migrating a Dealer Management System used by 750+ automotive businesses across Western Europe from a legacy VB6 desktop app to a cloud-native .NET/AWS platform."
 dateStart: "2025-01-01"
 dateEnd: "Present"
-location: "Cluj-Napoca, Romania"
+location: "Romania"
 type: "Full-time"
 stack:
-  - ".NET 10"
-  - "ASP.NET Core"
   - "React"
   - "TypeScript"
+  - "ASP.NET Core"
   - "AWS CDK"
-  - "ECS Fargate"
-  - "SQL Server"
+  - "AWS Fargate"
   - "Azure DevOps"
-  - "Docker"
+  - "SQL Server"
+  - "Amazon EventBridge"
+  - "SQS"
 metrics:
   - value: "750+"
     label: "Businesses on the platform"
@@ -27,10 +27,10 @@ metrics:
     label: "Faster deployments"
 ---
 
-**Led the cloud migration** to React/TypeScript and ASP.NET Core, provisioning the AWS estate from scratch with AWS CDK and splitting core APIs, time tracking and document processing into Fargate microservices. The platform now serves **23,000+ daily transactions** and **1,000+ concurrent users** with zero-downtime deploys.
+**Led the cloud migration** to React/TypeScript and ASP.NET Core, provisioning AWS infrastructure from scratch with CDK and decomposing core APIs into resilient Fargate microservices. Now serving **23,000+ daily transactions** and **1,000+ concurrent users** with zero-downtime deploys.
 
-**Cut deployment time by 86%** — from 90 minutes to under 12 — by building end-to-end Azure DevOps pipelines covering automated testing, SQL migrations and AWS releases.
+**Cut deployment time 86%** (90 → <12 min) by building end-to-end Azure DevOps pipelines covering automated testing, SQL migrations, and multi-environment AWS rollouts.
 
-**Eliminated roughly 42 hours of manual work every month** with Peppol-compliant e-invoicing modules built on .NET 10 using Clean Architecture and DDD, backed by Windows Service background automation.
+**Architected an event-driven communication layer** across microservices using Amazon EventBridge and SQS, with idempotent .NET consumer workers guaranteeing once processing and fault tolerance during peak traffic.
 
-**Ended recurring data divergence** by co-architecting a REST synchronisation layer that keeps an AWS RDS source of truth consistent with two on-premise SQL Servers.
+**Ended recurring data divergence** by co-engineering a REST sync layer that keeps an AWS RDS source of truth consistent with two on-premises SQL Server instances.

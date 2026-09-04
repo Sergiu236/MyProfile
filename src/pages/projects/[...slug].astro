@@ -26,7 +26,7 @@ type Props = {
 }
 
 const { project, prev, next } = Astro.props
-const { title, summary, period, status, role, tags, metrics, demoUrl, repoUrl } = project.data
+const { title, summary, period, status, role, tags, metrics, demoUrl, repoUrl, image } = project.data
 const { Content } = await project.render()
 ---
 
@@ -71,6 +71,16 @@ const { Content } = await project.render()
       <h1 class="mt-6 max-w-4xl text-h1">{title}</h1>
 
       <p class="mt-7 max-w-2xl text-lead leading-relaxed text-mist">{summary}</p>
+
+      {
+        image && (
+          <img
+            src={image}
+            alt={title}
+            class="mx-auto mt-12 max-h-[28rem] w-auto rounded-2xl border border-[--line] object-contain"
+          />
+        )
+      }
 
       {
         (demoUrl || repoUrl) && (

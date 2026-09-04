@@ -3,16 +3,15 @@ import PageLayout from "@layouts/PageLayout.astro"
 import Container from "@components/Container.astro"
 import Portrait from "@components/Portrait.astro"
 import Icon from "@components/Icon.astro"
-import MetricGrid from "@components/MetricGrid.astro"
 import SectionHeading from "@components/SectionHeading.astro"
 import ProjectCard from "@components/ProjectCard.astro"
 import PostRow from "@components/PostRow.astro"
 import ContactBand from "@components/ContactBand.astro"
-import { METRICS, SITE } from "@consts"
+import { SITE } from "@consts"
 import { getPosts, getProjects } from "@lib/content"
 
 const posts = (await getPosts()).slice(0, 3)
-const projects = (await getProjects()).slice(0, 3)
+const projects = (await getProjects()).slice(0, 1)
 ---
 
 <PageLayout title={SITE.TITLE} description={SITE.DESCRIPTION}>
@@ -32,23 +31,7 @@ const projects = (await getProjects()).slice(0, 3)
       <div class="grid items-center gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
         <!-- Words -->
         <div class="order-2 lg:order-1">
-          <p
-            class="inline-flex items-center gap-2.5 rounded-full border border-[--line] bg-void/50 px-4 py-2"
-            data-rise
-            style="--rise-delay: 0ms"
-          >
-            <span class="relative flex size-2">
-              <span
-                class="absolute inline-flex size-full animate-ping rounded-full bg-nebula opacity-70"
-              ></span>
-              <span class="relative inline-flex size-2 rounded-full bg-nebula"></span>
-            </span>
-            <span class="font-sans text-[0.7rem] uppercase tracking-[0.16em] text-mist">
-              {SITE.LOCATION} · {SITE.AVAILABILITY}
-            </span>
-          </p>
-
-          <h1 class="mt-8 text-hero">
+          <h1 class="text-hero">
             <span class="block" data-rise style="--rise-delay: 90ms">Sergiu</span>
             <span class="neon block" data-rise style="--rise-delay: 170ms">Mocan</span>
           </h1>
@@ -66,9 +49,10 @@ const projects = (await getProjects()).slice(0, 3)
             data-rise
             style="--rise-delay: 320ms"
           >
-            I take systems that were never built to scale — a twenty-year-old desktop monolith, a
-            process run by hand every morning — and rebuild them into cloud-native platforms that
-            hold up under real load.
+            I turn chaotic requirements into fault tolerant backends, 
+            observable pipelines, and resilient cloud architecture. 
+            Reliability isn't a fire drill. It's the quiet baseline 
+            I build in from day one.
           </p>
 
           <div
@@ -77,8 +61,7 @@ const projects = (await getProjects()).slice(0, 3)
             style="--rise-delay: 400ms"
           >
             <a href="/work" class="btn btn-primary" data-magnetic="0.16">
-              Enter the work
-              <Icon name="arrow-right" class="size-4" />
+              Experience
             </a>
 
             <a href={SITE.CV} download class="btn btn-ghost" data-magnetic="0.16">
@@ -110,16 +93,6 @@ const projects = (await getProjects()).slice(0, 3)
   </section>
 
   <!-- ══════════════════════════════════════════════════════════
-       IMPACT — the numbers, before anything else
-       ══════════════════════════════════════════════════════════ -->
-  <section class="py-20">
-    <Container size="wide">
-      <p class="eyebrow mb-8" data-reveal>Impact in production</p>
-      <MetricGrid metrics={METRICS} />
-    </Container>
-  </section>
-
-  <!-- ══════════════════════════════════════════════════════════
        POSITIONING
        ══════════════════════════════════════════════════════════ -->
   <section class="py-20">
@@ -132,24 +105,20 @@ const projects = (await getProjects()).slice(0, 3)
 
         <div class="space-y-8" data-reveal>
           <p class="text-[clamp(1.35rem,1rem+1.2vw,1.9rem)] font-normal leading-[1.45] text-starlight">
-            <span class="neon font-semibold">Legacy systems are not old code.</span> They
-            are decisions made under constraints that no longer exist, still running a business that
-            has moved on.
+            <span class="neon font-semibold">Driven by curiosity.</span>
           </p>
 
           <p class="max-w-2xl text-body-lg leading-relaxed text-mist">
-            At <strong class="font-semibold text-starlight">TSS Yonder</strong> I lead the migration
-            of a Dealer Management System used by 750+ automotive businesses across Western Europe,
-            from a VB6 desktop application to ASP.NET Core and React on AWS — infrastructure
-            provisioned from scratch with CDK, core services split into Fargate microservices, and
-            deploys that no longer require anyone to hold their breath.
+            It started with a simple obsession: the invisible journey of data. I wanted to know
+            exactly what happens in that microsecond between pressing a key on a keyboard and a
+            character appearing on a screen.
           </p>
 
           <p class="max-w-2xl text-body-lg leading-relaxed text-mist">
-            Outside of production I build things that force me to be precise: a nine-contract
-            Ethereum voting system where correctness has to be provable, and a Hamiltonian neural
-            network that refuses to violate conservation of energy. Both are exercises in the same
-            discipline — get the structure right and the behaviour follows.
+            Pulling that thread didn't just give me answers; it pulled me into a world that feels
+            entirely without end. To me, technology is like deep space, the further you travel into
+            it, the more the horizon expands. There is always another layer of abstraction to peel
+            back, another hidden mechanism to uncover.
           </p>
 
           <a href="/about" class="link-glow inline-flex items-center gap-2 pt-2 font-sans text-[0.78rem] uppercase tracking-[0.16em]">
@@ -166,15 +135,23 @@ const projects = (await getProjects()).slice(0, 3)
        ══════════════════════════════════════════════════════════ -->
   <section class="py-20">
     <Container size="wide">
-      <SectionHeading
-        kicker="Selected work"
-        title="Systems built end to end"
-        href="/projects"
-        linkText="All projects"
-      />
+      <SectionHeading kicker="Selected work" title="Systems built end to end" />
 
       <div class="mt-6">
         {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+      </div>
+
+      <div class="mt-10 flex justify-center">
+        <a
+          href="/projects"
+          class="link-glow group inline-flex items-center gap-2 font-sans text-[0.78rem] uppercase tracking-[0.16em]"
+        >
+          See all projects
+          <Icon
+            name="arrow-right"
+            class="size-4 transition-transform duration-500 ease-portal group-hover:translate-x-1.5"
+          />
+        </a>
       </div>
     </Container>
   </section>
@@ -182,20 +159,24 @@ const projects = (await getProjects()).slice(0, 3)
   <!-- ══════════════════════════════════════════════════════════
        WRITING
        ══════════════════════════════════════════════════════════ -->
-  <section class="py-20">
-    <Container size="wide">
-      <SectionHeading
-        kicker="Transmissions"
-        title="Recent writing"
-        href="/blog"
-        linkText="All posts"
-      />
+  {
+    posts.length > 0 && (
+      <section class="py-20">
+        <Container size="wide">
+          <SectionHeading
+            kicker="Transmissions"
+            title="Recent writing"
+            href="/blog"
+            linkText="All posts"
+          />
 
-      <div class="mt-6">
-        {posts.map((post) => <PostRow post={post} />)}
-      </div>
-    </Container>
-  </section>
+          <div class="mt-6">
+            {posts.map((post) => <PostRow post={post} />)}
+          </div>
+        </Container>
+      </section>
+    )
+  }
 
   <ContactBand />
 </PageLayout>

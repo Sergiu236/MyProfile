@@ -17,17 +17,17 @@ export async function getPosts(): Promise<Post[]> {
   return posts.sort(byNewest)
 }
 
-/** The lead story for /blog — an explicitly featured post, else the newest. */
+/** The lead story for /blog — only shown when a post explicitly opts in. */
 export function getFeatured(posts: Post[]): Post | undefined {
-  return posts.find((post) => post.data.featured) ?? posts[0]
+  return posts.find((post) => post.data.featured)
 }
 
-/** Only the sections that actually have posts, each with its count. */
+/** Every declared section, in taxonomy order, each with its post count. */
 export function getSectionsInUse(posts: Post[]) {
   return SECTIONS.map((section) => ({
     ...section,
     COUNT: posts.filter((post) => post.data.section === section.ID).length,
-  })).filter((section) => section.COUNT > 0)
+  }))
 }
 
 /** Every tag in use, most-used first, with counts and URL slugs. */
@@ -73,8 +73,13 @@ export async function getProjects(): Promise<Project[]> {
 
 /* ─── Work ───────────────────────────────────────────────────── */
 
-/** Roles ordered most recent first, ready to render as a timeline. */
+/** Roles ordered by weight (full-time work before part-time), then most recent first. */
 export async function getRoles(): Promise<Role[]> {
   const roles = await getCollection("work")
-  return roles.sort((a, b) => b.data.dateStart.getTime() - a.data.dateStart.getTime())
+  const weight = (type: string) => (type === "Full-time" ? 1 : 0)
+  return roles.sort(
+    (a, b) =>
+      weight(b.data.type) - weight(a.data.type) ||
+      b.data.dateStart.getTime() - a.data.dateStart.getTime(),
+  )
 }

@@ -1,4 +1,4 @@
-import type { Link, Metric, Page, Section, Site, Social, StackGroup } from "@types"
+import type { Link, Page, Section, Site, Social, StackGroup } from "@types"
 
 /* ─────────────────────────────────────────────────────────────
    IDENTITY
@@ -6,7 +6,7 @@ import type { Link, Metric, Page, Section, Site, Social, StackGroup } from "@typ
 export const SITE: Site = {
   TITLE: "Sergiu Mocan",
   NAME: "Sergiu Ioan Mocan",
-  ROLE: "Software Engineer · .NET & AWS",
+  ROLE: "Software Engineer · Cloud & DevOps",
   DESCRIPTION:
     "Software engineer building cloud-native .NET platforms on AWS. I take systems that were never meant to scale and rebuild them so they can.",
   AUTHOR: "Sergiu Ioan Mocan",
@@ -32,14 +32,14 @@ export const PROJECTS: Page = {
   TITLE: "Projects",
   KICKER: "Built out of curiosity",
   DESCRIPTION:
-    "Systems I designed end to end, from smart-contract architecture to physics-informed machine learning.",
+    "Systems I designed end to end.",
 }
 
 export const BLOG: Page = {
   TITLE: "Blog",
   KICKER: "Transmissions",
   DESCRIPTION:
-    "Notes from inside the machine — architecture decisions, cloud infrastructure, and the occasional detour into cryptography and physics.",
+    "The software development lifecycle: planning, system architecture, and agile delivery from start to deployment.",
 }
 
 export const ABOUT: Page = {
@@ -51,13 +51,7 @@ export const ABOUT: Page = {
 export const CONTACT: Page = {
   TITLE: "Contact",
   KICKER: "Open a channel",
-  DESCRIPTION: "The fastest ways to reach me, and what I am currently looking for.",
-}
-
-export const SEARCH: Page = {
-  TITLE: "Search",
-  KICKER: "Scan the archive",
-  DESCRIPTION: "Search every post and project by keyword, tag or technology.",
+  DESCRIPTION: "The fastest ways to reach me.",
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -96,28 +90,26 @@ export const SOCIALS: Social[] = [
 ]
 
 /* ─────────────────────────────────────────────────────────────
-   HEADLINE IMPACT — the numbers a recruiter scans first
-   ───────────────────────────────────────────────────────────── */
-export const METRICS: Metric[] = [
-  { VALUE: "750+", LABEL: "Businesses on the platform", ICON: "users" },
-  { VALUE: "23K+", LABEL: "Transactions handled daily", ICON: "trending-up" },
-  { VALUE: "1,000+", LABEL: "Concurrent users at peak", ICON: "zap" },
-  { VALUE: "86%", LABEL: "Faster deployments", ICON: "git-branch" },
-]
-
-/* ─────────────────────────────────────────────────────────────
    TECH STACK
    ───────────────────────────────────────────────────────────── */
 export const STACK: StackGroup[] = [
   {
     LABEL: "Languages",
     ICON: "terminal",
-    ITEMS: ["C#", "C++", "C", "TypeScript", "Python", "SQL", "Solidity", "Bash"],
+    ITEMS: ["C#", "C++", "C", "Java", "TypeScript", "Python", "SQL", "Solidity", "x86 Assembly", "Bash"],
   },
   {
     LABEL: "Frameworks",
     ICON: "layers",
-    ITEMS: [".NET / .NET Core", "ASP.NET Core", "EF Core", "React", "Node.js", "Avalonia UI"],
+    ITEMS: [
+      ".NET / .NET Core",
+      "ASP.NET Core",
+      "EF Core",
+      "Spring Boot",
+      "React",
+      "Node.js",
+      "Avalonia UI",
+    ],
   },
   {
     LABEL: "Cloud & Infra",
@@ -125,6 +117,8 @@ export const STACK: StackGroup[] = [
     ITEMS: [
       "AWS ECS / Fargate",
       "AWS CDK (IaC)",
+      "AWS EventBridge",
+      "AWS SQS",
       "ECR",
       "S3",
       "RDS",
@@ -148,12 +142,10 @@ export const EDUCATION = [
   {
     SCHOOL: "Babeș-Bolyai University",
     DEGREE: "M.Sc., Distributed Systems in the Internet",
-    PERIOD: "2026 — 2028",
   },
   {
     SCHOOL: "Babeș-Bolyai University",
     DEGREE: "B.Sc., Computer Science (English Section)",
-    PERIOD: "Completed",
   },
 ]
 
@@ -173,45 +165,68 @@ export const CERTIFICATIONS = [
    ───────────────────────────────────────────────────────────── */
 export const SECTIONS: Section[] = [
   {
-    ID: "engineering",
-    LABEL: "Engineering",
-    KICKER: "Architecture & craft",
-    DESCRIPTION:
-      "Clean Architecture, domain modelling, and the trade-offs behind long-lived .NET systems.",
-    ICON: "layers",
+    ID: "frontend-engineering",
+    LABEL: "Frontend Engineering",
+    KICKER: "The interface layer",
+    DESCRIPTION: "Component design, state management, and the trade-offs behind a UI that holds up.",
+    ICON: "globe",
     ACCENT: "text-glow",
   },
   {
-    ID: "cloud",
-    LABEL: "Cloud",
-    KICKER: "Infrastructure as code",
-    DESCRIPTION: "AWS, containers, pipelines, and the unglamorous work that makes deploys boring.",
-    ICON: "cloud",
+    ID: "backend-engineering",
+    LABEL: "Backend Engineering",
+    KICKER: "The parts nobody sees",
+    DESCRIPTION: "APIs, data models, and the systems that keep running long after the demo.",
+    ICON: "terminal",
     ACCENT: "text-nebula",
   },
   {
-    ID: "blockchain",
-    LABEL: "Blockchain",
-    KICKER: "Trustless systems",
-    DESCRIPTION: "Solidity, upgradeable proxies, Merkle proofs and on-chain storage economics.",
-    ICON: "shield",
-    ACCENT: "text-ember",
-  },
-  {
-    ID: "machine-learning",
-    LABEL: "Machine Learning",
-    KICKER: "Physics meets gradients",
-    DESCRIPTION: "Neural surrogates, energy conservation, and simulation that respects the physics.",
-    ICON: "cpu",
+    ID: "system-architecture",
+    LABEL: "System Architecture",
+    KICKER: "Structure & craft",
+    DESCRIPTION: "Clean Architecture, domain modelling, and the trade-offs behind long-lived systems.",
+    ICON: "layers",
     ACCENT: "text-glow-faint",
   },
   {
-    ID: "field-notes",
-    LABEL: "Field Notes",
-    KICKER: "The human layer",
-    DESCRIPTION: "Teaching, learning in public, and what four years of shipping actually taught me.",
-    ICON: "book-open",
+    ID: "cloud-devops",
+    LABEL: "Cloud & DevOps",
+    KICKER: "Infrastructure as code",
+    DESCRIPTION: "AWS, containers, pipelines, and the unglamorous work that makes deploys boring.",
+    ICON: "cloud",
     ACCENT: "text-amethyst-mist",
+  },
+  {
+    ID: "ai-machine-learning",
+    LABEL: "AI & Machine Learning",
+    KICKER: "Physics meets gradients",
+    DESCRIPTION: "Neural surrogates, energy conservation, and simulation that respects the physics.",
+    ICON: "cpu",
+    ACCENT: "text-glow-soft",
+  },
+  {
+    ID: "web3-blockchain",
+    LABEL: "Web3 & Blockchain",
+    KICKER: "Trustless systems",
+    DESCRIPTION: "Solidity, upgradeable proxies, Merkle proofs and on-chain storage economics.",
+    ICON: "shield",
+    ACCENT: "text-amethyst-lift",
+  },
+  {
+    ID: "troubleshooting",
+    LABEL: "Troubleshooting",
+    KICKER: "Root cause, not symptoms",
+    DESCRIPTION: "Production incidents, hard bugs, and the process of tracing an effect back to its cause.",
+    ICON: "zap",
+    ACCENT: "text-dim",
+  },
+  {
+    ID: "methodology",
+    LABEL: "Methodology",
+    KICKER: "How the work gets done",
+    DESCRIPTION: "Agile practice, teaching, and what four years of shipping actually taught me.",
+    ICON: "book-open",
+    ACCENT: "text-mist",
   },
 ]
 

@@ -1,20 +1,19 @@
 ---
 company: "Accounting System Development S.R.L."
 role: "Software Engineer"
-context: "A document-heavy accounting operation where ingestion, generation, routing and reporting were all run by hand, every single day."
-dateStart: "2022-06-01"
-dateEnd: "2024-09-01"
-location: "Cluj-Napoca, Romania"
+context: "A .NET desktop application automating a client's document workflow — ingestion, generation, routing and reporting — previously run by hand every day."
+dateStart: "2022-01-01"
+dateEnd: "2024-12-31"
+location: "Romania"
 type: "Full-time"
 stack:
   - ".NET"
   - "Avalonia UI"
   - "EF Core"
   - "PostgreSQL"
-  - "C#"
 metrics: []
 ---
 
-**Built a .NET desktop application** on Avalonia UI, EF Core and PostgreSQL that automated the client's document workflow end to end — ingestion, generation, routing and reporting — replacing a process the team had been running by hand every day.
+**Delivered a .NET desktop application** (Avalonia UI, EF Core, PostgreSQL) that automated a client's document workflow end to end (ingestion, generation, routing, and reporting), replacing a process the team had run by hand daily.
 
-**Shipped filtering and statistics tooling** that gave the client real-time visibility into document volume and processing status for the first time.
+**Shipped filtering and statistics tooling**, giving the client real-time visibility into document volume and processing status.

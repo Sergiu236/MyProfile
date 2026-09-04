@@ -11,7 +11,7 @@ const principles = [
   {
     icon: "layers",
     title: "Structure before cleverness",
-    body: "Most bugs are design decisions arriving late. Get the boundaries right — domain, application, infrastructure — and the clever part usually turns out to be unnecessary.",
+    body: "Most bugs are design decisions arriving late. Get the boundaries right: domain, application, infrastructure, and the clever part usually turns out to be unnecessary.",
   },
   {
     icon: "git-branch",
@@ -39,7 +39,6 @@ const principles = [
   <PageHeader
     kicker={ABOUT.KICKER}
     title="I build the layer people never see, and feel every day."
-    description={ABOUT.DESCRIPTION}
   />
 
   <!-- ── Narrative ──────────────────────────────────────────── -->
@@ -54,16 +53,8 @@ const principles = [
 
           <ul class="mt-10 space-y-4" data-reveal>
             <li class="flex items-center gap-3 text-mist">
-              <Icon name="map-pin" class="size-4 text-glow/60" />
-              {SITE.LOCATION}
-            </li>
-            <li class="flex items-center gap-3 text-mist">
               <Icon name="terminal" class="size-4 text-glow/60" />
               {SITE.ROLE}
-            </li>
-            <li class="flex items-center gap-3 text-mist">
-              <Icon name="zap" class="size-4 text-glow/60" />
-              {SITE.AVAILABILITY}
             </li>
           </ul>
         </div>
@@ -77,36 +68,48 @@ const principles = [
           </p>
 
           <p class="text-body-lg leading-relaxed text-mist">
-            Right now that means <strong class="font-semibold text-starlight">TSS Yonder</strong>,
-            where a Dealer Management System used by more than 750 automotive businesses across
-            Western Europe is moving off a VB6 desktop application and onto a cloud-native .NET
-            platform. I led that migration to React and ASP.NET Core, provisioned the AWS estate from
-            scratch with CDK, and split the core APIs, time tracking and document processing into
-            Fargate microservices. It now carries 23,000+ transactions a day and over a thousand
-            concurrent users, and deploys land without anyone watching a dashboard with their jaw
-            clenched.
+            Curiosity is what pulls you into the endless space of technology, but discipline is
+            what allows you to survive there. When you trace the hidden mechanisms of data far
+            enough, you eventually hit the enterprise reality. You stop just looking for answers
+            and start taking responsibility for systems that matter. For me, that transition
+            happened in the trenches of mission-critical architecture.
           </p>
 
           <p class="text-body-lg leading-relaxed text-mist">
-            Before that, at <strong class="font-semibold text-starlight">Accounting System
-            Development</strong>, I built a .NET desktop application on Avalonia UI, EF Core and
-            PostgreSQL that took a document workflow the team had been running by hand every day —
-            ingestion, generation, routing, reporting — and automated it end to end.
+            At <strong class="font-semibold text-starlight">TSS Yonder</strong>, taking
+            responsibility meant facing a five million line legacy monolith. It was a breathing,
+            fragile system supporting hundreds of businesses, where one wrong move could halt
+            operations across Western Europe. Maturing as an engineer meant learning how to
+            untangle that knot while the system was still running. I led the charge to decompose
+            that massive application into resilient cloud native microservices on AWS. The true
+            victory was not just deploying modern React and .NET code. It was achieving the
+            absolute silence of 23,000 daily transactions flowing flawlessly, with automated
+            deployments that finally let everyone sleep at night.
           </p>
 
           <p class="text-body-lg leading-relaxed text-mist">
-            The work I choose outside of production tends to have a hard edge of correctness to it.
-            A nine-contract Ethereum voting system behind upgradeable proxies, where double-voting
-            has to be impossible rather than discouraged. A Hamiltonian neural network that learns
-            engine dynamics without ever inventing energy, because the conservation law is built
-            into the architecture instead of the loss function. Different domains, one instinct:
-            make the guarantee structural.
+            While enterprise software taught me scale and stability, my innate curiosity still
+            drives me to explore the edges of what code can do. Today, I gravitate toward domains
+            that force me to be absolutely precise. Sometimes that precision looks like
+            translating silent human intent into digital action by building a
+            <strong class="font-semibold text-starlight">computer vision application</strong>
+            that tracks iris movements to control a cursor. Other times, it means architecting an
+            <strong class="font-semibold text-starlight">Ethereum voting system</strong> where
+            double-voting is rendered mathematically impossible by the strict constraints of the
+            smart contracts. I even apply this philosophy to physics, designing a
+            <strong class="font-semibold text-starlight">Hamiltonian Neural Network</strong> that
+            learns engine dynamics without hallucinating energy because the laws of thermodynamics
+            are baked directly into the architecture itself.
           </p>
 
           <p class="text-body-lg leading-relaxed text-mist">
-            I am also, on evenings, a tutor — preparing candidates for the Babeș-Bolyai Computer
-            Science admission exam in algorithms, data structures and logic. It is the best code
-            review practice I have ever found.
+            Whether I am untangling millions of lines of corporate code or enforcing physics in
+            machine learning, the core philosophy remains the same: replace hope with structural
+            guarantees. On the evenings I want to sharpen that philosophy, I tutor candidates for
+            the Babeș-Bolyai Computer Science admission exam. Taking my mind back to the raw
+            fundamentals of algorithms, logic, and data structures is the most rigorous code
+            review I have ever found. It reminds me that no matter how deep into the tech space
+            you travel, everything still relies on that very first keystroke.
           </p>
         </div>
       </div>
@@ -137,9 +140,9 @@ const principles = [
   </section>
 
   <!-- ── Stack ──────────────────────────────────────────────── -->
-  <section class="pb-24">
+  <section id="instruments" class="scroll-mt-32 pb-24">
     <Container size="wide">
-      <p class="eyebrow mb-12" data-reveal>Instruments</p>
+      <p class="eyebrow mb-12" data-reveal>Instruments I've worked with</p>
       <StackGrid />
     </Container>
   </section>

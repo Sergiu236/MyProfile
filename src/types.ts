@@ -31,13 +31,6 @@ export type Social = {
   HREF: string
 }
 
-/** A headline number a recruiter can read in under a second */
-export type Metric = {
-  VALUE: string
-  LABEL: string
-  ICON: string
-}
-
 /** One row of the tech stack, grouped by discipline */
 export type StackGroup = {
   LABEL: string

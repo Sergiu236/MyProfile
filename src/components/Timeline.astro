@@ -1,7 +1,7 @@
 ---
 import type { MarkdownInstance } from "astro"
 import type { Role } from "@lib/content"
-import { formatDuration, formatMonthYear, isoDate } from "@lib/utils"
+import { formatYear, isoDate } from "@lib/utils"
 import Icon from "@components/Icon.astro"
 
 type Entry = Role & { Content: MarkdownInstance<Record<string, never>>["Content"] }
@@ -32,20 +32,16 @@ const isCurrent = (end: Date | string) => typeof end === "string"
           <div class="lg:pr-8 lg:text-right">
             <p class="font-sans text-[0.8rem] uppercase tracking-[0.12em] text-starlight">
               <time datetime={isoDate(role.data.dateStart)}>
-                {formatMonthYear(role.data.dateStart)}
+                {formatYear(role.data.dateStart)}
               </time>
               <span class="text-glow/50"> → </span>
               {current ? (
                 <span class="text-glow">Present</span>
               ) : (
                 <time datetime={isoDate(role.data.dateEnd)}>
-                  {formatMonthYear(role.data.dateEnd)}
+                  {formatYear(role.data.dateEnd)}
                 </time>
               )}
-            </p>
-
-            <p class="mt-2 font-sans text-[0.72rem] uppercase tracking-[0.12em] text-dim">
-              {formatDuration(role.data.dateStart, role.data.dateEnd)}
             </p>
 
             <p class="mt-4 flex items-center gap-1.5 text-[0.8rem] text-dim lg:justify-end">
