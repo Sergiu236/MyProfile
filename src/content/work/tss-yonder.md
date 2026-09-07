@@ -1,21 +1,18 @@
 ---
 company: "TSS Yonder"
-role: "Software Engineer, .NET & AWS"
-context: "Migrating a Dealer Management System used by 750+ automotive businesses across Western Europe from a legacy VB6 desktop app to a cloud-native .NET/AWS platform."
+role: "Software Engineer"
+context: "Migrating a Dealer Management System used by 750+ automotive businesses across Western Europe from a legacy VB6 desktop app to a cloud-native AWS platform."
 dateStart: "2025-01-01"
 dateEnd: "Present"
 location: "Romania"
 type: "Full-time"
 stack:
-  - "React"
-  - "TypeScript"
-  - "ASP.NET Core"
-  - "AWS CDK"
-  - "AWS Fargate"
-  - "Azure DevOps"
+  - ".NET (C#)"
+  - "Spring Boot (Java)"
+  - "React (TypeScript)"
+  - "AWS CDK/ ECS/ EventBridge/ SQS"
   - "SQL Server"
-  - "Amazon EventBridge"
-  - "SQS"
+  - "Azure DevOps"
 metrics:
   - value: "750+"
     label: "Businesses on the platform"
@@ -27,10 +24,10 @@ metrics:
     label: "Faster deployments"
 ---
 
-**Led the cloud migration** to React/TypeScript and ASP.NET Core, provisioning AWS infrastructure from scratch with CDK and decomposing core APIs into resilient Fargate microservices. Now serving **23,000+ daily transactions** and **1,000+ concurrent users** with zero-downtime deploys.
+**Led the cloud migration** to a **React/TypeScript** frontend and a **polyglot microservices backend**, provisioning AWS infrastructure with **CDK** and deploying to **ECS Fargate**. Scaled the system to reliably handle **23,000+ daily transactions** and **1,000+ concurrent users** with zero downtime.
 
 **Cut deployment time 86%** (90 → <12 min) by building end-to-end Azure DevOps pipelines covering automated testing, SQL migrations, and multi-environment AWS rollouts.
 
-**Architected an event-driven communication layer** across microservices using Amazon EventBridge and SQS, with idempotent .NET consumer workers guaranteeing once processing and fault tolerance during peak traffic.
+**Architected an event-driven communication layer** across microservices using **Amazon EventBridge** and **SQS**, with idempotent consumer workers guaranteeing once processing and fault tolerance during peak traffic.
 
-**Ended recurring data divergence** by co-engineering a REST sync layer that keeps an AWS RDS source of truth consistent with two on-premises SQL Server instances.
+**Ended recurring data divergence** by co-engineering a REST sync layer that keeps an **AWS RDS** source of truth consistent with two on-premises SQL Server instances.

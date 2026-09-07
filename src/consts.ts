@@ -158,42 +158,29 @@ export const STACK: StackGroup[] = [
   {
     LABEL: "Languages",
     ICON: "terminal",
-    ITEMS: ["C#", "C++", "C", "Java", "TypeScript", "Python", "SQL", "Solidity", "x86 Assembly", "Bash"],
+    ITEMS: ["C#", "C++", "C", "Java", "TypeScript", "Python", "Solidity", "x86 Assembly"],
   },
   {
     LABEL: "Frameworks",
     ICON: "layers",
-    ITEMS: [
-      ".NET / .NET Core",
-      "ASP.NET Core",
-      "EF Core",
-      "Spring Boot",
-      "React",
-      "Node.js",
-      "Avalonia UI",
-    ],
+    ITEMS: [".NET", "Spring Boot", "React", "Node.js", "Avalonia UI", "Astro"],
   },
   {
-    LABEL: "Cloud & Infra",
+    LABEL: "Cloud & DevOps",
     ICON: "cloud",
     ITEMS: [
-      "AWS ECS / Fargate",
+      "AWS ECS/ ECR/ S3/ RDS/ VPC/ CloudWatch",
       "AWS CDK (IaC)",
-      "AWS EventBridge",
-      "AWS SQS",
-      "ECR",
-      "S3",
-      "RDS",
-      "VPC",
       "Docker",
       "Kubernetes",
       "Azure DevOps CI/CD",
+      "Bash",
     ],
   },
   {
     LABEL: "Data",
     ICON: "database",
-    ITEMS: ["SQL Server", "PostgreSQL", "Redis"],
+    ITEMS: ["SQL", "SQL Server", "PostgreSQL", "Redis"],
   },
 ]
 

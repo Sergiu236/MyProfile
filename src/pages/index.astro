@@ -10,7 +10,7 @@ import ContactBand from "@components/ContactBand.astro"
 import { SITE } from "@consts"
 import { getPosts, getProjects } from "@lib/content"
 
-const posts = (await getPosts()).slice(0, 3)
+const posts = (await getPosts()).slice(0, 1)
 const projects = (await getProjects()).slice(0, 1)
 ---
 
@@ -163,15 +163,23 @@ const projects = (await getProjects()).slice(0, 1)
     posts.length > 0 && (
       <section class="py-20">
         <Container size="wide">
-          <SectionHeading
-            kicker="Transmissions"
-            title="Recent writing"
-            href="/blog"
-            linkText="All posts"
-          />
+          <SectionHeading kicker="Transmissions" title="Recent writing" />
 
           <div class="mt-6">
             {posts.map((post) => <PostRow post={post} />)}
+          </div>
+
+          <div class="mt-10 flex justify-center">
+            <a
+              href="/blog"
+              class="link-glow group inline-flex items-center gap-2 font-sans text-[0.78rem] uppercase tracking-[0.16em]"
+            >
+              See all posts
+              <Icon
+                name="arrow-right"
+                class="size-4 transition-transform duration-500 ease-portal group-hover:translate-x-1.5"
+              />
+            </a>
           </div>
         </Container>
       </section>
